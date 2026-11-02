@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ─────────────────────────────────── */
+@theme inline {
+  /* Palette — from CUIDAR+ brand */
+  --color-navy-900: #16304D;
+  --color-navy-700: #1F3A5F;
+  --color-teal-700: #1E7068;
+  --color-teal-600: #2A8C82;
+  --color-teal-100: #D3E9E5;
+  --color-mint-50: #E8F1EE;
+  --color-white: #FBFDFC;
+  --color-ink: #24303D;
+  --color-muted: #5B6B78;
+  --color-sand-400: #C8A96A;
+
+  /* Font families */
+  --font-heading: var(--font-montserrat);
+  --font-body: var(--font-nunito-sans);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+/* ── Base Styles ───────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+  color: var(--color-ink);
+  background: var(--color-white);
+  font-size: 18px;
+  line-height: 1.667;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography Scale ──────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), sans-serif;
+  color: var(--color-navy-900);
+  line-height: 1.14;
+}
+
+.text-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+/* ── Section Label (01 — Sobre) ────────────────────── */
+.section-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-teal-600);
+  margin-bottom: 0.75rem;
+}
+
+/* ── Card Style ────────────────────────────────────── */
+.card {
+  border-radius: 16px;
+  background: var(--color-white);
+  box-shadow: 0 8px 24px rgba(22, 48, 77, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 32px rgba(22, 48, 77, 0.12);
+  border-color: var(--color-teal-600);
+}
+
+/* ── Pill Button ───────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  background: var(--color-navy-700);
+  color: #fff;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--color-navy-900);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(22, 48, 77, 0.2);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--color-navy-700);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border: 2px solid var(--color-navy-700);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--color-navy-700);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ── Badge ─────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 1rem;
+  border-radius: 9999px;
+  background: var(--color-teal-100);
+  color: var(--color-teal-700);
+  font-family: var(--font-mono), monospace;
+  font-weight: 500;
+  font-size: 0.8125rem;
+}
+
+/* ── Placeholder style ─────────────────────────────── */
+.placeholder-confirm {
+  background: #FFF3CD;
+  color: #856404;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: var(--font-mono), monospace;
+}
+
+/* ── Focus visible ─────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-teal-600);
+  outline-offset: 2px;
+}
+
+/* ── Gradient brand ────────────────────────────────── */
+.gradient-brand {
+  background: linear-gradient(135deg, var(--color-navy-700), var(--color-teal-600));
+}
+
+/* ── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-mint-50);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-teal-600);
+  border-radius: 4px;
+}
+
+/* ── Selection ─────────────────────────────────────── */
+::selection {
+  background: var(--color-teal-100);
+  color: var(--color-navy-900);
+}
+
+/* ── WhatsApp float ────────────────────────────────── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+}
+
+/* ── Responsive body text ──────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    line-height: 1.625;
+  }
+}

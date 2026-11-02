@@ -1,0 +1,84 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Briefcase } from "lucide-react";
+import { timeline } from "@/content/portfolio";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import SectionWrapper from "./SectionWrapper";
+
+export default function Timeline() {
+  const prefersReduced = useReducedMotion();
+
+  return (
+    <SectionWrapper id="trajetoria" number="03" label="Trajetória" className="bg-mint-50">
+      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
+        Minha trajetória profissional
+      </h2>
+
+      <div className="relative">
+        {/* Vertical line */}
+        <div
+          className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] bg-teal-600/20 -translate-x-1/2"
+          aria-hidden="true"
+        />
+
+        <div className="space-y-12">
+          {timeline.map((entry, i) => {
+            const isLeft = i % 2 === 0;
+            return (
+              <motion.div
+                key={i}
+                className={`relative flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12 ${
+                  isLeft ? "md:flex-row" : "md:flex-row-reverse"
+                }`}
+                initial={prefersReduced ? {} : { opacity: 0, x: isLeft ? -24 : 24 }}
+                whileInView={prefersReduced ? {} : { opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {/* Timeline dot */}
+                <div
+                  className={`absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-[3px] z-10 ${
+                    entry.isCurrent
+                      ? "bg-teal-600 border-teal-100"
+                      : "bg-white border-teal-600"
+                  }`}
+                  aria-hidden="true"
+                />
+
+                {/* Content card */}
+                <div className={`ml-14 md:ml-0 md:w-[calc(50%-3rem)] ${isLeft ? "md:text-right" : "md:text-left"}`}>
+                  <div className="card p-6 inline-block text-left w-full">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Briefcase size={18} className="text-teal-600 shrink-0" strokeWidth={1.5} />
+                      <span className="text-mono text-xs text-teal-700 font-medium">
+                        {entry.period}
+                      </span>
+                      {entry.isCurrent && (
+                        <span className="badge !text-xs !py-0.5 !px-2">
+                          Atual
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-lg font-bold text-navy-900 mb-1" style={{ fontFamily: "var(--font-heading)" }}>
+                      {entry.role}
+                    </h3>
+                    <p className="text-sm font-semibold text-teal-700 mb-2">
+                      {entry.institution}
+                    </p>
+                    <p className="text-sm text-muted leading-relaxed">
+                      {entry.highlights}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Spacer */}
+                <div className="hidden md:block md:w-[calc(50%-3rem)]" />
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+}
