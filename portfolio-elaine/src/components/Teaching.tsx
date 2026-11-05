@@ -1,14 +1,26 @@
 "use client";
 
 import { GraduationCap, ArrowRight } from "lucide-react";
-import { teaching } from "@/content/portfolio";
+import { teaching as defaultTeaching } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import SectionWrapper from "./SectionWrapper";
 
 export default function Teaching() {
+  let teaching = defaultTeaching;
+
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.teaching) {
+      teaching = portfolio.data.teaching;
+    }
+  } catch {
+    // Fallback
+  }
+
   return (
     <SectionWrapper id="docencia" number="05" label="Docência" className="bg-mint-50">
       <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
-        Docência e educação
+        {teaching.sectionTitle || "Docência e educação"}
       </h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
@@ -30,20 +42,22 @@ export default function Teaching() {
         ))}
       </div>
 
-      {/* Courses taught */}
-      <div className="mb-10">
-        <h3 className="text-lg font-bold text-navy-900 mb-4" style={{ fontFamily: "var(--font-heading)" }}>
-          Cursos ministrados
-        </h3>
-        <ul className="space-y-2">
-          {teaching.coursesTaught.map((course, i) => (
-            <li key={i} className="flex items-start gap-2 text-ink">
-              <span className="text-teal-600 font-bold mt-0.5">+</span>
-              {course}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Cursos ministrados */}
+      {teaching.coursesTaught && teaching.coursesTaught.length > 0 && (
+        <div className="mb-10">
+          <h3 className="text-lg font-bold text-navy-900 mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+            Cursos ministrados
+          </h3>
+          <ul className="space-y-2">
+            {teaching.coursesTaught.map((course, i) => (
+              <li key={i} className="flex items-start gap-2 text-ink">
+                <span className="text-teal-600 font-bold mt-0.5">+</span>
+                {course}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* CTA */}
       <div className="card p-8 gradient-brand text-center">

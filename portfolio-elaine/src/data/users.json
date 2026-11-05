@@ -1,0 +1,19 @@
+[
+  {
+    "email": "elainecsagurgel@gmail.com",
+    "name": "Elaine C. S. A. Gurgel",
+    "hasPassword": true,
+    "createdAt": "2026-11-04T23:54:08.042Z",
+    "passwordHash": "3e8a99aca7b0321a58e93ee13fc7cd14365f6df8c0a48aa70f4032ce8a56bc46aa2d76d489a06dc7e5073ac490aa2ea70e91e08e71ffda53261fa80d28a85918",
+    "salt": "c50254250f2dea8065f755077a5fc360",
+    "lastLogin": "2026-11-04T23:54:08.256Z"
+  },
+  {
+    "email": "sousa.natalialima1@gmail.com",
+    "name": "Natália Lima",
+    "hasPassword": false,
+    "createdAt": "2026-11-04T23:54:08.042Z",
+    "resetTokenHash": "466afbbc506c3ee599b8de2cbf64a01850310e92207a65aba6badd221cfc3625",
+    "resetTokenExpiry": 1793922848288
+  }
+]

@@ -59,14 +59,40 @@ export interface ContactInfo {
   lattes: string;
   lattesUrl: string;
   whatsapp: string;
+  whatsappNumber?: string;
+}
+
+export interface HeroContent {
+  label: string;
+  title: string;
+  subtitle: string;
+  photo?: string;
+  ctaPrimary: { text: string; href: string };
+  ctaSecondary: { text: string; href: string };
+  badges: string[];
+}
+
+export interface AboutContent {
+  sectionTitle?: string;
+  paragraphs: string[];
+  quote: string;
+  quoteAuthor?: string;
+}
+
+export interface TeachingContent {
+  sectionTitle?: string;
+  entries: { institution: string; period: string; description: string }[];
+  coursesTaught: string[];
+  cta: string;
 }
 
 // ── Hero ──────────────────────────────────────────
-export const hero = {
+export const hero: HeroContent = {
   label: "por Elaine Gurgel · Enfermagem perioperatória",
   title: "20 anos conectando cuidado, ciência e segurança no bloco cirúrgico.",
   subtitle:
     "Enfermeira especialista SOBECC em Centro Cirúrgico, CME e Recuperação Anestésica. Lidero a Central de Material e Esterilização do Hospital São Carlos (Rede D'Or) e formo novos especialistas na pós-graduação da UNIFOR.",
+  photo: "/elaine-photo.jpg",
   ctaPrimary: { text: "Conheça minha trajetória", href: "#trajetoria" },
   ctaSecondary: {
     text: "Convide para palestra ou consultoria",
@@ -93,13 +119,15 @@ export const stats: Stat[] = [
 ];
 
 // ── Sobre ─────────────────────────────────────────
-export const about = {
+export const about: AboutContent = {
+  sectionTitle: "Quem sou eu",
   paragraphs: [
     "Sou enfermeira formada pela Universidade de Fortaleza (UNIFOR) e especialista em Centro Cirúrgico, Central de Material e Esterilização e Recuperação Anestésica pela SOBECC, título revalidado por dois triênios.",
     "Há 20 anos dedico minha carreira ao bloco cirúrgico do Hospital São Carlos, em Fortaleza. Comecei na unidade de internação, passei mais de uma década no centro cirúrgico — onde coordenei por 10 anos o transoperatório do transplante hepático — e hoje lidero a CME.",
     "Acredito que a segurança do paciente começa no detalhe: no instrumental bem processado, no indicador bem medido, na equipe bem treinada. É isso que levo para a gestão, para a sala de aula e para cada palestra.",
   ],
   quote: "Segurança do paciente começa no detalhe que ninguém vê.",
+  quoteAuthor: "Elaine Gurgel",
 };
 
 // ── Áreas de Atuação ──────────────────────────────
@@ -269,7 +297,8 @@ export const courses: CourseEntry[] = [
 ];
 
 // ── Docência ──────────────────────────────────────
-export const teaching = {
+export const teaching: TeachingContent = {
+  sectionTitle: "Docência e educação",
   entries: [
     {
       institution: "UNIFOR",
@@ -346,7 +375,8 @@ export const contact: ContactInfo = {
   linkedinUrl: "https://www.linkedin.com/in/elaine-gurgel",
   lattes: "lattes.cnpq.br/0433468117601000",
   lattesUrl: "https://lattes.cnpq.br/0433468117601000",
-  whatsapp: "[A CONFIRMAR]",
+  whatsapp: "(85) 99940-6173",
+  whatsappNumber: "558599406173",
 };
 
 export const contactForm = {

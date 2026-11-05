@@ -13,25 +13,33 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import CareLine from "@/components/CareLine";
+import { PortfolioProvider } from "@/context/PortfolioContext";
+import { getContent } from "@/lib/content-store";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
+  const content = getContent();
+
   return (
-    <main className="relative min-h-screen bg-white text-ink overflow-x-hidden selection:bg-teal-100 selection:text-navy-900">
-      <CareLine />
-      <Header />
-      <Hero />
-      <Stats />
-      <About />
-      <Expertise />
-      <Timeline />
-      <Education />
-      <Teaching />
-      <Talks />
-      <Events />
-      <Awards />
-      <Contact />
-      <Footer />
-      <WhatsAppButton />
-    </main>
+    <PortfolioProvider initialData={content}>
+      <main className="relative min-h-screen bg-white text-ink overflow-x-hidden selection:bg-teal-100 selection:text-navy-900">
+        <CareLine />
+        <Header />
+        <Hero />
+        <Stats />
+        <About />
+        <Expertise />
+        <Timeline />
+        <Education />
+        <Teaching />
+        <Talks />
+        <Events />
+        <Awards />
+        <Contact />
+        <Footer />
+        <WhatsAppButton />
+      </main>
+    </PortfolioProvider>
   );
 }

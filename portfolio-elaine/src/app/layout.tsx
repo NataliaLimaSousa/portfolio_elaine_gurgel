@@ -24,9 +24,17 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://elainegurgel.com.br"),
   title: "Elaine Gurgel — Enfermeira especialista em CME e Centro Cirúrgico | CUIDAR+",
   description:
     "Enfermeira especialista SOBECC com 20 anos em centro cirúrgico e CME. Supervisora no Hospital São Carlos, docente UNIFOR e palestrante.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "Elaine Gurgel — Enfermeira especialista em CME e Centro Cirúrgico | CUIDAR+",
     description:

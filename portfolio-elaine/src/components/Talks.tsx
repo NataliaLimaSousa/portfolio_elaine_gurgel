@@ -3,7 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mic, FileText, LayoutGrid } from "lucide-react";
-import { talks, talkFilters, talkHighlights } from "@/content/portfolio";
+import {
+  talks as defaultTalks,
+  talkFilters as defaultFilters,
+  talkHighlights as defaultHighlights,
+} from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
@@ -17,6 +22,21 @@ export default function Talks() {
   const [activeFilter, setActiveFilter] = useState("Todos");
   const prefersReduced = useReducedMotion();
 
+  let talks = defaultTalks;
+  let talkFilters = defaultFilters;
+  let talkHighlights = defaultHighlights;
+
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data) {
+      if (portfolio.data.talks) talks = portfolio.data.talks;
+      if (portfolio.data.talkFilters) talkFilters = portfolio.data.talkFilters;
+      if (portfolio.data.talkHighlights) talkHighlights = portfolio.data.talkHighlights;
+    }
+  } catch {
+    // Fallback
+  }
+
   const filteredTalks =
     activeFilter === "Todos"
       ? talks
@@ -29,15 +49,17 @@ export default function Talks() {
       </h2>
 
       {/* Speaker highlights */}
-      <p className="text-muted mb-8">
-        Palestrante convidada:{" "}
-        {talkHighlights.map((h, i) => (
-          <span key={i}>
-            <strong className="text-ink">{h}</strong>
-            {i < talkHighlights.length - 1 && " · "}
-          </span>
-        ))}
-      </p>
+      {talkHighlights && talkHighlights.length > 0 && (
+        <p className="text-muted mb-8">
+          Palestrante convidada:{" "}
+          {talkHighlights.map((h, i) => (
+            <span key={i}>
+              <strong className="text-ink">{h}</strong>
+              {i < talkHighlights.length - 1 && " · "}
+            </span>
+          ))}
+        </p>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-10" role="tablist" aria-label="Filtrar por tema">
@@ -47,7 +69,7 @@ export default function Talks() {
             role="tab"
             aria-selected={activeFilter === filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
               activeFilter === filter
                 ? "bg-navy-700 text-white"
                 : "bg-teal-100 text-teal-700 hover:bg-teal-600 hover:text-white"

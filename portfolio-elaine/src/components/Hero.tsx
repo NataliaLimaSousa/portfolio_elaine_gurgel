@@ -3,11 +3,22 @@
 import { motion } from "framer-motion";
 import { ArrowDown, MessageCircle } from "lucide-react";
 import Image from "next/image";
-import { hero } from "@/content/portfolio";
+import { hero as defaultHero, HeroContent } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 export default function Hero() {
   const prefersReduced = useReducedMotion();
+  let hero: HeroContent = defaultHero;
+
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.hero) {
+      hero = portfolio.data.hero;
+    }
+  } catch {
+    // Fallback padrão
+  }
 
   const fadeUp = prefersReduced
     ? {}
@@ -108,7 +119,7 @@ export default function Hero() {
               {/* Decorative ring */}
               <div className="absolute -inset-4 rounded-full border-2 border-teal-600/20" aria-hidden="true" />
               <div className="absolute -inset-8 rounded-full border border-teal-600/10" aria-hidden="true" />
-              
+
               {/* Care Line start decoration */}
               <svg
                 className="absolute -right-12 top-1/2 w-24 h-48 -translate-y-1/2 hidden lg:block"
@@ -124,9 +135,9 @@ export default function Hero() {
                 />
               </svg>
 
-              <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-xl">
+              <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-xl bg-slate-100">
                 <Image
-                  src="/elaine-photo.jpg"
+                  src={hero.photo || "/elaine-photo.jpg"}
                   alt="Elaine Gurgel — Enfermeira especialista em Centro Cirúrgico e CME"
                   width={400}
                   height={400}

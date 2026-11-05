@@ -2,12 +2,23 @@
 
 import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
-import { events } from "@/content/portfolio";
+import { events as defaultEvents } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
 export default function Events() {
   const prefersReduced = useReducedMotion();
+
+  let events = defaultEvents;
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.events) {
+      events = portfolio.data.events;
+    }
+  } catch {
+    // Fallback
+  }
 
   return (
     <SectionWrapper id="eventos" number="07" label="Eventos organizados" className="bg-mint-50">

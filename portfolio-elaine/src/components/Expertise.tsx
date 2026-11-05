@@ -9,7 +9,8 @@ import {
   GraduationCap,
   Workflow,
 } from "lucide-react";
-import { expertise } from "@/content/portfolio";
+import { expertise as defaultExpertise } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
@@ -24,6 +25,16 @@ const iconMap: Record<string, React.ElementType> = {
 
 export default function Expertise() {
   const prefersReduced = useReducedMotion();
+
+  let expertise = defaultExpertise;
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.expertise) {
+      expertise = portfolio.data.expertise;
+    }
+  } catch {
+    // Padrão
+  }
 
   return (
     <SectionWrapper id="atuacao" number="02" label="Áreas de atuação">

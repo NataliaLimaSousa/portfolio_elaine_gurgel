@@ -1,21 +1,35 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
-import { contact } from "@/content/portfolio";
+import { Smartphone } from "lucide-react";
+import { contact as defaultContact } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 
-export default function WhatsAppButton() {
-  // Se o número for [A CONFIRMAR], direciona com mensagem padrão
-  const phoneParam = contact.whatsapp.includes("CONFIRMAR")
-    ? ""
-    : contact.whatsapp.replace(/\D/g, "");
-  
+interface WhatsAppButtonProps {
+  customPhone?: string;
+  customText?: string;
+}
+
+export default function WhatsAppButton({ customPhone, customText }: WhatsAppButtonProps) {
+  let contact = defaultContact;
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.contact) {
+      contact = portfolio.data.contact;
+    }
+  } catch {
+    // Caso esteja fora do provider, usa o padrão
+  }
+
+  // Número solicitado: 85999406173
+  const rawNumber = customPhone || contact.whatsappNumber || "558599406173";
+  const cleanDigits = rawNumber.replace(/\D/g, "");
+  const phoneParam = cleanDigits.startsWith("55") ? cleanDigits : `55${cleanDigits}`;
+
   const textParam = encodeURIComponent(
-    "Olá, Elaine! Vi seu portfólio CUIDAR+ e gostaria de conversar sobre uma oportunidade/parceria."
+    customText || "Olá, Elaine! Vi seu portfólio CUIDAR+ e gostaria de conversar sobre uma oportunidade/parceria."
   );
 
-  const href = phoneParam
-    ? `https://wa.me/${phoneParam}?text=${textParam}`
-    : `https://wa.me/?text=${textParam}`;
+  const href = `https://wa.me/${phoneParam}?text=${textParam}`;
 
   return (
     <a
@@ -23,10 +37,24 @@ export default function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-float group"
-      aria-label="Falar no WhatsApp"
-      title="Conversar no WhatsApp"
+      aria-label="Falar via WhatsApp / Celular: (85) 99940-6173"
+      title="Falar via WhatsApp / Celular: (85) 99940-6173"
     >
-      <MessageCircle size={32} className="group-hover:scale-110 transition-transform" />
+      <div className="relative flex items-center justify-center">
+        {/* Símbolo de comunicação por celular */}
+        <Smartphone size={30} className="group-hover:scale-110 transition-transform text-white stroke-[2.2]" />
+
+        {/* Indicador de onda de chamada / status ativo */}
+        <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-400 border-2 border-emerald-600"></span>
+        </span>
+      </div>
+
+      {/* Tooltip moderno */}
+      <span className="pointer-events-none absolute right-16 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-navy-900 px-3 py-1.5 text-xs font-semibold text-white shadow-xl opacity-0 transition-opacity duration-200 group-hover:opacity-100 hidden sm:block">
+        Falar no WhatsApp: (85) 99940-6173
+      </span>
     </a>
   );
 }

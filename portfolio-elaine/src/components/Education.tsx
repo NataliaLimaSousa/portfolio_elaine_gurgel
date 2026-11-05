@@ -3,13 +3,27 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Award, ChevronDown, BookOpen } from "lucide-react";
-import { education, courses } from "@/content/portfolio";
+import { education as defaultEducation, courses as defaultCourses } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
 export default function Education() {
   const [showCourses, setShowCourses] = useState(false);
   const prefersReduced = useReducedMotion();
+
+  let education = defaultEducation;
+  let courses = defaultCourses;
+
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data) {
+      if (portfolio.data.education) education = portfolio.data.education;
+      if (portfolio.data.courses) courses = portfolio.data.courses;
+    }
+  } catch {
+    // Fallback
+  }
 
   return (
     <SectionWrapper id="formacao" number="04" label="Formação e certificações">
@@ -45,7 +59,7 @@ export default function Education() {
       <div className="card overflow-hidden border border-teal-100">
         <button
           onClick={() => setShowCourses(!showCourses)}
-          className="w-full flex items-center justify-between p-6 text-left hover:bg-mint-50 transition-colors"
+          className="w-full flex items-center justify-between p-6 text-left hover:bg-mint-50 transition-colors cursor-pointer"
           aria-expanded={showCourses}
           aria-controls="courses-panel"
         >

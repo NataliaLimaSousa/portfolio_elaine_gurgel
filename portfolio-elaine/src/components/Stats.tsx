@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { stats } from "@/content/portfolio";
+import { stats as defaultStats } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 function AnimatedCounter({ value, inView, reduced }: { value: number; inView: boolean; reduced: boolean }) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(reduced ? value : 0);
 
   useEffect(() => {
     if (!inView || reduced) {
-      setCount(value);
       return;
     }
     let start = 0;
@@ -28,13 +28,23 @@ function AnimatedCounter({ value, inView, reduced }: { value: number; inView: bo
     return () => clearInterval(timer);
   }, [inView, value, reduced]);
 
-  return <span>{count}</span>;
+  return <span>{reduced ? value : count}</span>;
 }
 
 export default function Stats() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const prefersReduced = useReducedMotion();
+
+  let stats = defaultStats;
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.stats) {
+      stats = portfolio.data.stats;
+    }
+  } catch {
+    // Padrão
+  }
 
   return (
     <section

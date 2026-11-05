@@ -2,12 +2,23 @@
 
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
-import { timeline } from "@/content/portfolio";
+import { timeline as defaultTimeline } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
 export default function Timeline() {
   const prefersReduced = useReducedMotion();
+
+  let timeline = defaultTimeline;
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.timeline) {
+      timeline = portfolio.data.timeline;
+    }
+  } catch {
+    // Fallback padrão
+  }
 
   return (
     <SectionWrapper id="trajetoria" number="03" label="Trajetória" className="bg-mint-50">
@@ -16,7 +27,7 @@ export default function Timeline() {
       </h2>
 
       <div className="relative">
-        {/* Vertical line */}
+        {/* Linha vertical */}
         <div
           className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] bg-teal-600/20 -translate-x-1/2"
           aria-hidden="true"

@@ -31,7 +31,9 @@ export default function Header() {
     } else {
       document.body.style.overflow = "";
     }
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
   return (
@@ -39,7 +41,7 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/80 backdrop-blur-lg shadow-sm"
+            ? "bg-white/85 backdrop-blur-lg shadow-sm"
             : "bg-transparent"
         }`}
       >
@@ -81,7 +83,9 @@ export default function Header() {
           {/* Mobile toggle */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 text-navy-900"
+            className={`lg:hidden p-2 rounded-xl transition-colors z-50 cursor-pointer ${
+              mobileOpen ? "text-white bg-white/10" : "text-navy-900 hover:bg-slate-100"
+            }`}
             aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={mobileOpen}
           >
@@ -90,7 +94,7 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Mobile menu */}
+      {/* Mobile menu modal */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -98,15 +102,15 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-navy-900 flex flex-col items-center justify-center"
+            className="fixed inset-0 z-40 bg-navy-900/98 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center"
           >
-            <ul className="flex flex-col items-center gap-8">
+            <ul className="flex flex-col items-center gap-6 my-auto">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="text-2xl font-bold text-white hover:text-teal-100 transition-colors"
+                    className="text-2xl font-bold text-white hover:text-teal-300 transition-colors"
                   >
                     {link.label}
                   </a>
@@ -116,7 +120,7 @@ export default function Header() {
             <a
               href="#contato"
               onClick={() => setMobileOpen(false)}
-              className="mt-12 btn-primary !bg-teal-600 !text-white"
+              className="mb-8 btn-primary !bg-teal-600 !text-white w-full max-w-xs justify-center"
             >
               Fale comigo
             </a>

@@ -2,8 +2,9 @@
 
 import { useState, FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Mail, ExternalLink, Send, CheckCircle } from "lucide-react";
-import { contact, contactForm } from "@/content/portfolio";
+import { Mail, ExternalLink, Send, CheckCircle, Phone } from "lucide-react";
+import { contact as defaultContact, contactForm as defaultContactForm } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 export default function Contact() {
@@ -11,14 +12,35 @@ export default function Contact() {
   const [loading, setLoading] = useState(false);
   const prefersReduced = useReducedMotion();
 
+  let contact = defaultContact;
+  let contactForm = defaultContactForm;
+
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.contact) {
+      contact = portfolio.data.contact;
+      contactForm = {
+        title: portfolio.data.contact.sectionTitle || defaultContactForm.title,
+        subtitle: portfolio.data.contact.subtitle || defaultContactForm.subtitle,
+        reasons: portfolio.data.contact.reasons || defaultContactForm.reasons,
+      };
+    }
+  } catch {
+    // Fallback
+  }
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // Simula envio (substituir por Formspree em produção)
     await new Promise((r) => setTimeout(r, 1000));
     setLoading(false);
     setSubmitted(true);
   };
+
+  const whatsappClean = (contact.whatsappNumber || "558599406173").replace(/\D/g, "");
+  const whatsappUrl = `https://wa.me/${whatsappClean.startsWith("55") ? whatsappClean : `55${whatsappClean}`}?text=${encodeURIComponent(
+    "Olá, Elaine! Vi seu portfólio CUIDAR+ e gostaria de conversar."
+  )}`;
 
   return (
     <section id="contato" className="bg-navy-900 py-20 md:py-28 px-6 md:px-12 lg:px-20">
@@ -41,6 +63,23 @@ export default function Contact() {
             </p>
 
             <div className="space-y-6">
+              {/* Celular / WhatsApp */}
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 text-white hover:text-teal-100 transition-colors group"
+              >
+                <div className="w-12 h-12 rounded-xl bg-navy-700 flex items-center justify-center group-hover:bg-emerald-600 transition-colors">
+                  <Phone size={22} className="text-emerald-400 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <p className="text-xs text-teal-100/60 text-mono">WhatsApp / Celular</p>
+                  <p className="font-semibold">{contact.whatsapp || "(85) 99940-6173"}</p>
+                </div>
+              </a>
+
+              {/* E-mail */}
               <a
                 href={`mailto:${contact.email}`}
                 className="flex items-center gap-4 text-white hover:text-teal-100 transition-colors group"
@@ -54,6 +93,7 @@ export default function Contact() {
                 </div>
               </a>
 
+              {/* LinkedIn */}
               <a
                 href={contact.linkedinUrl}
                 target="_blank"
@@ -75,6 +115,7 @@ export default function Contact() {
                 </div>
               </a>
 
+              {/* Lattes */}
               <a
                 href={contact.lattesUrl}
                 target="_blank"
@@ -175,7 +216,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-primary !bg-teal-600 hover:!bg-teal-700 w-full justify-center disabled:opacity-60"
+                  className="btn-primary !bg-teal-600 hover:!bg-teal-700 w-full justify-center disabled:opacity-60 cursor-pointer"
                 >
                   {loading ? "Enviando..." : "Enviar mensagem"}
                   <Send size={18} />

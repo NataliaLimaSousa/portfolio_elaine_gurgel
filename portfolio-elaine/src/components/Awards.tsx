@@ -2,12 +2,23 @@
 
 import { motion } from "framer-motion";
 import { Trophy, Star } from "lucide-react";
-import { awards } from "@/content/portfolio";
+import { awards as defaultAwards } from "@/content/portfolio";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
 export default function Awards() {
   const prefersReduced = useReducedMotion();
+
+  let awards = defaultAwards;
+  try {
+    const portfolio = usePortfolio();
+    if (portfolio?.data?.awards) {
+      awards = portfolio.data.awards;
+    }
+  } catch {
+    // Fallback
+  }
 
   return (
     <SectionWrapper id="reconhecimentos" number="08" label="Reconhecimentos">
