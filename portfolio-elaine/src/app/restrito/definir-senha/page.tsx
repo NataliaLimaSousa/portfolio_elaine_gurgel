@@ -63,7 +63,7 @@ function DefinirSenhaForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) {
-      setError("Token de validação ausente. Utilize o link enviado ao seu e-mail.");
+      setError("Solicitação inválida. Entre novamente pela página de login com o código inicial.");
       return;
     }
 
@@ -114,12 +114,12 @@ function DefinirSenhaForm() {
           className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
           style={{ fontFamily: "var(--font-heading)" }}
         >
-          Definir Senha Segura
+          Alterar Código de Acesso
         </h1>
         <p className="text-xs sm:text-sm text-teal-100/70 mt-1">
           {emailParam ? (
             <>
-              Criando senha para:{" "}
+              Crie sua nova senha para:{" "}
               <strong className="text-teal-300 font-mono">{emailParam}</strong>
             </>
           ) : (
@@ -132,7 +132,7 @@ function DefinirSenhaForm() {
         <div className="mb-6 p-3.5 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-xs flex items-start gap-2.5">
           <AlertCircle size={16} className="shrink-0 mt-0.5 text-amber-400" />
           <span>
-            Atenção: Nenhum token de acesso foi detectado. Para cadastrar sua senha, solicite um link seguro na página inicial do Acesso Restrito.
+            Atenção: para alterar sua senha, entre na página de Acesso Restrito com seu e-mail e o código inicial (ou use a opção &quot;Esqueceu a senha?&quot;).
           </span>
         </div>
       )}

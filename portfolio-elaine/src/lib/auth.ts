@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import { cookies } from "next/headers";
 import {
   hashPassword,
@@ -106,62 +107,62 @@ export function isEmailAuthorized(email: string): boolean {
   return AUTHORIZED_EMAILS.includes(normalized);
 }
 
-// ── Solicitação de Primeiro Acesso / Redefinição de Senha ───────────
-export async function generateFirstAccessLink(email: string, origin: string): Promise<{
-  success: boolean;
-  message: string;
-  token?: string;
-  link?: string;
-}> {
+// ── Código Inicial de Acesso ────────────────────────────────────────
+// Usado no primeiro acesso e na opção "Esqueceu a senha?".
+export const INITIAL_ACCESS_CODE =
+  process.env.INITIAL_ACCESS_CODE || "primeiroacesso123";
+
+function isInitialAccessCode(code: string): boolean {
+  const a = Buffer.from(hashToken(code), "hex");
+  const b = Buffer.from(hashToken(INITIAL_ACCESS_CODE), "hex");
+  return crypto.timingSafeEqual(a, b);
+}
+
+// Gera um token temporário (15 min) que autoriza a troca de senha
+function issuePasswordChangeToken(normalizedEmail: string): string {
+  const rawToken = generateSecureToken();
+  const users = getAllUsers();
+  const user = users.find((u) => u.email.toLowerCase() === normalizedEmail);
+  if (!user) throw new Error("Usuário não encontrado");
+  user.resetTokenHash = hashToken(rawToken);
+  user.resetTokenExpiry = Date.now() + 15 * 60 * 1000;
+  saveUsers(users);
+  return rawToken;
+}
+
+function buildChangePasswordPath(email: string, token: string): string {
+  return `/restrito/definir-senha?token=${token}&email=${encodeURIComponent(email)}`;
+}
+
+// ── Esqueceu a Senha: valida e-mail + código inicial ────────────────
+export async function requestPasswordResetWithCode(
+  email: string,
+  code: string,
+  ip = "unknown"
+): Promise<{ success: boolean; message: string; redirectTo?: string }> {
   const normalized = email.toLowerCase().trim();
+  const rateKey = `reset:${normalized}:${ip}`;
 
-  // Verifica se o e-mail consta na lista de acesso pré-cadastrado
-  if (!isEmailAuthorized(normalized)) {
-    return {
-      success: false,
-      message: "Acesso restrito. Este e-mail não possui autorização de acesso ao sistema.",
-    };
-  }
-
-  // Verifica rate limit por e-mail
-  const rate = checkRateLimit(`first-access:${normalized}`);
+  const rate = checkRateLimit(rateKey);
   if (!rate.allowed) {
     return {
       success: false,
-      message: `Muitas solicitações. Aguarde ${rate.waitMinutes} minutos antes de tentar novamente.`,
+      message: `Muitas tentativas incorretas. Aguarde ${rate.waitMinutes} minutos antes de tentar novamente.`,
     };
   }
 
-  const rawToken = generateSecureToken();
-  const hashed = hashToken(rawToken);
-  const expiry = Date.now() + 24 * 60 * 60 * 1000; // 24 horas
-
-  const users = getAllUsers();
-  const userIndex = users.findIndex((u) => u.email.toLowerCase() === normalized);
-
-  if (userIndex === -1) {
-    users.push({
-      email: normalized,
-      name: normalized.includes("elaine") ? "Elaine Gurgel" : "Usuário Autorizado",
-      hasPassword: false,
-      resetTokenHash: hashed,
-      resetTokenExpiry: expiry,
-      createdAt: new Date().toISOString(),
-    });
-  } else {
-    users[userIndex].resetTokenHash = hashed;
-    users[userIndex].resetTokenExpiry = expiry;
+  if (!isEmailAuthorized(normalized) || !isInitialAccessCode(code)) {
+    registerFailedAttempt(rateKey);
+    return { success: false, message: "E-mail não autorizado ou código inicial incorreto." };
   }
 
-  saveUsers(users);
-
-  const link = `${origin}/restrito/definir-senha?token=${rawToken}&email=${encodeURIComponent(normalized)}`;
+  clearRateLimit(rateKey);
+  const token = issuePasswordChangeToken(normalized);
 
   return {
     success: true,
-    message: "Link de acesso e definição de senha gerado com segurança.",
-    token: rawToken,
-    link,
+    message: "Código validado. Defina sua nova senha.",
+    redirectTo: buildChangePasswordPath(normalized, token),
   };
 }
 
@@ -190,16 +191,16 @@ export async function setUserPasswordWithToken(
   const user = users.find((u) => u.email.toLowerCase() === normalized);
 
   if (!user || !user.resetTokenHash || !user.resetTokenExpiry) {
-    return { success: false, message: "Token inválido ou não encontrado. Solicite um novo link de acesso." };
+    return { success: false, message: "Solicitação inválida ou já utilizada. Entre novamente com o código inicial." };
   }
 
   if (Date.now() > user.resetTokenExpiry) {
-    return { success: false, message: "O link de acesso expirou (validade de 24h). Solicite um novo link." };
+    return { success: false, message: "O tempo para alterar a senha expirou (15 min). Entre novamente com o código inicial." };
   }
 
   const hashedIncoming = hashToken(token);
   if (hashedIncoming !== user.resetTokenHash) {
-    return { success: false, message: "Token de segurança incorreto ou violado." };
+    return { success: false, message: "Solicitação inválida. Entre novamente com o código inicial." };
   }
 
   // Gera hash seguro PBKDF2
@@ -225,7 +226,14 @@ export async function authenticateUser(
   email: string,
   password: string,
   ip = "unknown"
-): Promise<{ success: boolean; message: string; sessionToken?: string; user?: { email: string; name: string } }> {
+): Promise<{
+  success: boolean;
+  message: string;
+  sessionToken?: string;
+  mustChangePassword?: boolean;
+  redirectTo?: string;
+  user?: { email: string; name: string };
+}> {
   const normalized = email.toLowerCase().trim();
 
   // Verifica rate limit
@@ -248,10 +256,22 @@ export async function authenticateUser(
 
   const user = getUserByEmail(normalized);
 
+  // Primeiro acesso: ainda sem senha própria → exige o código inicial
   if (!user || !user.hasPassword || !user.passwordHash || !user.salt) {
+    if (!isInitialAccessCode(password)) {
+      registerFailedAttempt(rateKey);
+      return {
+        success: false,
+        message: "Primeiro acesso: utilize o código inicial fornecido para entrar.",
+      };
+    }
+    clearRateLimit(rateKey);
+    const token = issuePasswordChangeToken(normalized);
     return {
-      success: false,
-      message: "Este e-mail é autorizado, mas ainda não possui senha cadastrada. Utilize a aba 'Primeiro Acesso' para definir sua senha.",
+      success: true,
+      mustChangePassword: true,
+      message: "Primeiro acesso identificado. Crie uma nova senha para continuar.",
+      redirectTo: buildChangePasswordPath(normalized, token),
     };
   }
 

@@ -20,6 +20,16 @@ export async function POST(req: NextRequest) {
 
     const result = await authenticateUser(email, password, ip);
 
+    // Primeiro acesso com código inicial → precisa trocar a senha (sem sessão ainda)
+    if (result.success && result.mustChangePassword) {
+      return NextResponse.json({
+        success: true,
+        mustChangePassword: true,
+        message: result.message,
+        redirectTo: result.redirectTo,
+      });
+    }
+
     if (!result.success || !result.sessionToken) {
       return NextResponse.json(
         { success: false, message: result.message },

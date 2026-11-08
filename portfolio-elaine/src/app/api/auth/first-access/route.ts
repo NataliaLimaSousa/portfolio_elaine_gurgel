@@ -1,20 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateFirstAccessLink } from "@/lib/auth";
+import { requestPasswordResetWithCode } from "@/lib/auth";
 
+// "Esqueceu a senha?": valida e-mail autorizado + código inicial
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email } = body;
+    const { email, code } = body;
 
-    if (!email || typeof email !== "string") {
+    if (!email || typeof email !== "string" || !code || typeof code !== "string") {
       return NextResponse.json(
-        { success: false, message: "E-mail obrigatório." },
+        { success: false, message: "Informe o e-mail e o código inicial." },
         { status: 400 }
       );
     }
 
-    const origin = req.nextUrl.origin || "http://localhost:3000";
-    const result = await generateFirstAccessLink(email, origin);
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0] ||
+      req.headers.get("x-real-ip") ||
+      "127.0.0.1";
+
+    const result = await requestPasswordResetWithCode(email, code, ip);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 403 });
@@ -29,4 +34,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
