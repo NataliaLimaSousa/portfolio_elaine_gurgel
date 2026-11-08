@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { StorageNotConfiguredError } from "@/lib/storage";
 import { requestPasswordResetWithCode } from "@/lib/auth";
 
 // "Esqueceu a senha?": valida e-mail autorizado + código inicial
@@ -28,6 +29,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Erro na API first-access:", error);
+    if (error instanceof StorageNotConfiguredError) {
+      return NextResponse.json({ success: false, message: error.message }, { status: 503 });
+    }
     return NextResponse.json(
       { success: false, message: "Erro interno no servidor ao processar solicitação." },
       { status: 500 }

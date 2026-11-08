@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import {
@@ -14,6 +12,7 @@ import {
   clearRateLimit,
   validatePasswordStrength,
 } from "./security";
+import { readDocument, writeDocument } from "./storage";
 
 export const AUTHORIZED_EMAILS = [
   "elainecsagurgel@gmail.com",
@@ -32,73 +31,36 @@ export interface UserRecord {
   createdAt: string;
 }
 
-const DATA_DIR = path.join(process.cwd(), "src", "data");
-const USERS_FILE = path.join(DATA_DIR, "users.json");
+const USERS_KEY = "users";
 
-function ensureDirectoryExists(dir: string) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+function defaultUserName(email: string): string {
+  return email.includes("elaine") ? "Elaine C. S. A. Gurgel" : "Natália Lima";
 }
 
-export function getAllUsers(): UserRecord[] {
-  ensureDirectoryExists(DATA_DIR);
+export async function getAllUsers(): Promise<UserRecord[]> {
+  const users = (await readDocument<UserRecord[]>(USERS_KEY)) || [];
 
-  if (!fs.existsSync(USERS_FILE)) {
-    // Inicializa com os usuários pré-cadastrados
-    const initialUsers: UserRecord[] = [
-      {
-        email: "elainecsagurgel@gmail.com",
-        name: "Elaine C. S. A. Gurgel",
+  // Garante que todos os e-mails autorizados existam (sem senha → primeiro acesso)
+  for (const authEmail of AUTHORIZED_EMAILS) {
+    if (!users.some((u) => u.email.toLowerCase() === authEmail)) {
+      users.push({
+        email: authEmail,
+        name: defaultUserName(authEmail),
         hasPassword: false,
         createdAt: new Date().toISOString(),
-      },
-      {
-        email: "sousa.natalialima1@gmail.com",
-        name: "Natália Lima",
-        hasPassword: false,
-        createdAt: new Date().toISOString(),
-      },
-    ];
-    fs.writeFileSync(USERS_FILE, JSON.stringify(initialUsers, null, 2), "utf-8");
-    return initialUsers;
-  }
-
-  try {
-    const raw = fs.readFileSync(USERS_FILE, "utf-8");
-    const users: UserRecord[] = JSON.parse(raw);
-    
-    // Garante que ambos os e-mails pré-cadastrados existam no arquivo
-    let modified = false;
-    for (const authEmail of AUTHORIZED_EMAILS) {
-      if (!users.some((u) => u.email.toLowerCase() === authEmail)) {
-        users.push({
-          email: authEmail,
-          name: authEmail.includes("elaine") ? "Elaine C. S. A. Gurgel" : "Natália Lima",
-          hasPassword: false,
-          createdAt: new Date().toISOString(),
-        });
-        modified = true;
-      }
+      });
     }
-    if (modified) {
-      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
-    }
-    return users;
-  } catch (err) {
-    console.error("Erro ao carregar users.json:", err);
-    return [];
   }
+  return users;
 }
 
-export function saveUsers(users: UserRecord[]): void {
-  ensureDirectoryExists(DATA_DIR);
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
+export async function saveUsers(users: UserRecord[]): Promise<void> {
+  await writeDocument(USERS_KEY, users);
 }
 
-export function getUserByEmail(email: string): UserRecord | null {
+export async function getUserByEmail(email: string): Promise<UserRecord | null> {
   const normalized = email.toLowerCase().trim();
-  const users = getAllUsers();
+  const users = await getAllUsers();
   return users.find((u) => u.email.toLowerCase() === normalized) || null;
 }
 
@@ -119,14 +81,14 @@ function isInitialAccessCode(code: string): boolean {
 }
 
 // Gera um token temporário (15 min) que autoriza a troca de senha
-function issuePasswordChangeToken(normalizedEmail: string): string {
+async function issuePasswordChangeToken(normalizedEmail: string): Promise<string> {
   const rawToken = generateSecureToken();
-  const users = getAllUsers();
+  const users = await getAllUsers();
   const user = users.find((u) => u.email.toLowerCase() === normalizedEmail);
   if (!user) throw new Error("Usuário não encontrado");
   user.resetTokenHash = hashToken(rawToken);
   user.resetTokenExpiry = Date.now() + 15 * 60 * 1000;
-  saveUsers(users);
+  await saveUsers(users);
   return rawToken;
 }
 
@@ -157,7 +119,7 @@ export async function requestPasswordResetWithCode(
   }
 
   clearRateLimit(rateKey);
-  const token = issuePasswordChangeToken(normalized);
+  const token = await issuePasswordChangeToken(normalized);
 
   return {
     success: true,
@@ -187,7 +149,7 @@ export async function setUserPasswordWithToken(
     };
   }
 
-  const users = getAllUsers();
+  const users = await getAllUsers();
   const user = users.find((u) => u.email.toLowerCase() === normalized);
 
   if (!user || !user.resetTokenHash || !user.resetTokenExpiry) {
@@ -212,7 +174,7 @@ export async function setUserPasswordWithToken(
   user.resetTokenHash = undefined;
   user.resetTokenExpiry = undefined;
 
-  saveUsers(users);
+  await saveUsers(users);
   clearRateLimit(`login:${normalized}`);
 
   return {
@@ -254,7 +216,7 @@ export async function authenticateUser(
     };
   }
 
-  const user = getUserByEmail(normalized);
+  const user = await getUserByEmail(normalized);
 
   // Primeiro acesso: ainda sem senha própria → exige o código inicial
   if (!user || !user.hasPassword || !user.passwordHash || !user.salt) {
@@ -266,7 +228,7 @@ export async function authenticateUser(
       };
     }
     clearRateLimit(rateKey);
-    const token = issuePasswordChangeToken(normalized);
+    const token = await issuePasswordChangeToken(normalized);
     return {
       success: true,
       mustChangePassword: true,
@@ -288,11 +250,16 @@ export async function authenticateUser(
   // Sucesso: limpa tentativas e cria sessão assinada
   clearRateLimit(rateKey);
 
-  const users = getAllUsers();
-  const uIndex = users.findIndex((u) => u.email.toLowerCase() === normalized);
-  if (uIndex !== -1) {
-    users[uIndex].lastLogin = new Date().toISOString();
-    saveUsers(users);
+  // Registra último acesso (não impede o login se a gravação falhar)
+  try {
+    const users = await getAllUsers();
+    const uIndex = users.findIndex((u) => u.email.toLowerCase() === normalized);
+    if (uIndex !== -1) {
+      users[uIndex].lastLogin = new Date().toISOString();
+      await saveUsers(users);
+    }
+  } catch (err) {
+    console.error("Não foi possível registrar o último acesso:", err);
   }
 
   const sessionToken = createSignedSessionToken(normalized);
@@ -318,6 +285,6 @@ export async function getCurrentSessionUser(): Promise<UserRecord | null> {
   const payload = verifySignedSessionToken(sessionCookie);
   if (!payload) return null;
 
-  const user = getUserByEmail(payload.email);
+  const user = await getUserByEmail(payload.email);
   return user;
 }

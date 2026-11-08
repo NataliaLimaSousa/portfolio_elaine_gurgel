@@ -1,16 +1,9 @@
-import fs from "fs";
-import path from "path";
 import { PortfolioData } from "./types";
 import * as originalContent from "@/content/portfolio";
+import publishedContent from "@/data/portfolio-content.json";
+import { readDocument, writeDocument } from "./storage";
 
-const DATA_DIR = path.join(process.cwd(), "src", "data");
-const CONTENT_FILE = path.join(DATA_DIR, "portfolio-content.json");
-
-function ensureDirectoryExists(dir: string) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-}
+const CONTENT_KEY = "portfolio-content";
 
 export function getDefaultContent(): PortfolioData {
   return {
@@ -78,52 +71,43 @@ export function getDefaultContent(): PortfolioData {
   };
 }
 
-export function getContent(): PortfolioData {
-  ensureDirectoryExists(DATA_DIR);
+function mergeWithDefaults(parsed: Partial<PortfolioData>): PortfolioData {
+  const defaults = getDefaultContent();
+  // Mescla com defaults para garantir que novos campos estejam presentes
+  return {
+    ...defaults,
+    ...parsed,
+    header: { ...defaults.header, ...(parsed.header || {}) },
+    hero: { ...defaults.hero, ...(parsed.hero || {}) },
+    about: { ...defaults.about, ...(parsed.about || {}) },
+    teaching: { ...defaults.teaching, ...(parsed.teaching || {}) },
+    contact: { ...defaults.contact, ...(parsed.contact || {}) },
+    footer: { ...defaults.footer, ...(parsed.footer || {}) },
+  };
+}
 
-  if (!fs.existsSync(CONTENT_FILE)) {
-    const defaults = getDefaultContent();
-    fs.writeFileSync(CONTENT_FILE, JSON.stringify(defaults, null, 2), "utf-8");
-    return defaults;
-  }
-
+export async function getContent(): Promise<PortfolioData> {
   try {
-    const raw = fs.readFileSync(CONTENT_FILE, "utf-8");
-    const parsed = JSON.parse(raw);
-    const defaults = getDefaultContent();
-
-    // Mescla com defaults para garantir que novos campos estejam presentes
-    return {
-      ...defaults,
-      ...parsed,
-      header: { ...defaults.header, ...(parsed.header || {}) },
-      hero: { ...defaults.hero, ...(parsed.hero || {}) },
-      about: { ...defaults.about, ...(parsed.about || {}) },
-      teaching: { ...defaults.teaching, ...(parsed.teaching || {}) },
-      contact: { ...defaults.contact, ...(parsed.contact || {}) },
-      footer: { ...defaults.footer, ...(parsed.footer || {}) },
-    };
+    const stored = await readDocument<Partial<PortfolioData>>(CONTENT_KEY);
+    // Sem conteúdo salvo ainda: usa o conteúdo publicado no repositório
+    return mergeWithDefaults(stored || (publishedContent as Partial<PortfolioData>));
   } catch (err) {
-    console.error("Erro ao ler portfolio-content.json:", err);
-    return getDefaultContent();
+    console.error("Erro ao ler conteúdo do portfólio:", err);
+    return mergeWithDefaults(publishedContent as Partial<PortfolioData>);
   }
 }
 
-export function saveContent(data: PortfolioData, updatedBy = "admin"): PortfolioData {
-  ensureDirectoryExists(DATA_DIR);
-
+export async function saveContent(data: PortfolioData, updatedBy = "admin"): Promise<PortfolioData> {
   const enriched: PortfolioData = {
     ...data,
     lastUpdated: new Date().toISOString(),
     updatedBy,
   };
 
-  fs.writeFileSync(CONTENT_FILE, JSON.stringify(enriched, null, 2), "utf-8");
+  await writeDocument(CONTENT_KEY, enriched);
   return enriched;
 }
 
-export function resetContent(updatedBy = "admin"): PortfolioData {
-  const defaults = getDefaultContent();
-  return saveContent(defaults, updatedBy);
+export async function resetContent(updatedBy = "admin"): Promise<PortfolioData> {
+  return saveContent(getDefaultContent(), updatedBy);
 }
-

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { StorageNotConfiguredError } from "@/lib/storage";
 import { authenticateUser } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
@@ -54,6 +55,9 @@ export async function POST(req: NextRequest) {
     return response;
   } catch (error) {
     console.error("Erro na API login:", error);
+    if (error instanceof StorageNotConfiguredError) {
+      return NextResponse.json({ success: false, message: error.message }, { status: 503 });
+    }
     return NextResponse.json(
       { success: false, message: "Erro interno no servidor ao realizar autenticação." },
       { status: 500 }

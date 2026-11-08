@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { StorageNotConfiguredError } from "@/lib/storage";
 import { resetContent } from "@/lib/content-store";
 import { getCurrentSessionUser } from "@/lib/auth";
 
@@ -13,7 +14,7 @@ export async function POST() {
   }
 
   try {
-    const defaults = resetContent(user.email);
+    const defaults = await resetContent(user.email);
     return NextResponse.json({
       success: true,
       message: "Conteúdo restaurado para o padrão original com sucesso!",
@@ -21,6 +22,9 @@ export async function POST() {
     });
   } catch (error) {
     console.error("Erro ao resetar conteúdo:", error);
+    if (error instanceof StorageNotConfiguredError) {
+      return NextResponse.json({ success: false, message: error.message }, { status: 503 });
+    }
     return NextResponse.json(
       { success: false, message: "Erro ao restaurar conteúdo padrão." },
       { status: 500 }

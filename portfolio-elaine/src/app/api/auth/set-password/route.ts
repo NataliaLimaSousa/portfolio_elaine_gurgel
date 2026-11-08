@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { StorageNotConfiguredError } from "@/lib/storage";
 import { setUserPasswordWithToken } from "@/lib/auth";
 import { createSignedSessionToken } from "@/lib/security";
 
@@ -46,6 +47,9 @@ export async function POST(req: NextRequest) {
     return response;
   } catch (error) {
     console.error("Erro na API set-password:", error);
+    if (error instanceof StorageNotConfiguredError) {
+      return NextResponse.json({ success: false, message: error.message }, { status: 503 });
+    }
     return NextResponse.json(
       { success: false, message: "Erro interno no servidor ao definir senha." },
       { status: 500 }

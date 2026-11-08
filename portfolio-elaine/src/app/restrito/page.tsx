@@ -131,7 +131,7 @@ export default function AcessoRestritoPage() {
             </div>
             <h1
               className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
+              style={{ fontFamily: "var(--font-heading)", color: "#ffffff" }}
             >
               {view === "login" ? "Acesso Restrito" : "Esqueceu a senha?"}
             </h1>
