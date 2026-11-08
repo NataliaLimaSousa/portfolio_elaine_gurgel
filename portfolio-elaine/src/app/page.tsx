@@ -23,7 +23,7 @@ export default async function Home() {
 
   return (
     <PortfolioProvider initialData={content}>
-      <main className="relative min-h-screen bg-white text-ink overflow-x-hidden selection:bg-teal-100 selection:text-navy-900">
+      <main className="relative min-h-screen bg-surface text-ink overflow-x-hidden selection:bg-chip selection:text-heading">
         <CareLine />
         <Header />
         <Hero />

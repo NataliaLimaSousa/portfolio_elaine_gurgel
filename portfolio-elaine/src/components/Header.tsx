@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { label: "Sobre", href: "#sobre" },
@@ -41,7 +42,7 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/85 backdrop-blur-lg shadow-sm"
+            ? "bg-surface/85 backdrop-blur-lg shadow-sm"
             : "bg-transparent"
         }`}
       >
@@ -53,7 +54,7 @@ export default function Header() {
               alt="CUIDAR+ logo"
               width={180}
               height={48}
-              className="h-10 w-auto md:h-12"
+              className="logo-adaptive h-10 w-auto md:h-12"
               priority
             />
           </a>
@@ -64,7 +65,7 @@ export default function Header() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="text-sm font-semibold text-ink hover:text-teal-700 transition-colors duration-200"
+                  className="text-sm font-semibold text-ink hover:text-accent-strong transition-colors duration-200"
                 >
                   {link.label}
                 </a>
@@ -72,25 +73,28 @@ export default function Header() {
             ))}
           </ul>
 
-          {/* CTA desktop */}
-          <a
-            href="#contato"
-            className="hidden lg:inline-flex btn-primary !py-2.5 !px-6 !text-sm"
-          >
-            Fale comigo
-          </a>
+          {/* Alternar tema + CTA desktop */}
+          <div className="hidden lg:flex items-center gap-4">
+            <ThemeToggle />
+            <a href="#contato" className="btn-primary !py-2.5 !px-6 !text-sm">
+              Fale comigo
+            </a>
+          </div>
 
-          {/* Mobile toggle */}
+          {/* Mobile: tema + menu */}
+          <div className="lg:hidden flex items-center gap-1 z-50">
+            <ThemeToggle onDark={mobileOpen} />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`lg:hidden p-2 rounded-xl transition-colors z-50 cursor-pointer ${
-              mobileOpen ? "text-white bg-white/10" : "text-navy-900 hover:bg-slate-100"
+            className={`p-2 rounded-xl transition-colors cursor-pointer ${
+              mobileOpen ? "text-white bg-white/10" : "text-heading hover:bg-chip"
             }`}
             aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
+          </div>
         </nav>
       </header>
 

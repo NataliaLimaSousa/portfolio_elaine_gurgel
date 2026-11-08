@@ -22,7 +22,7 @@ export default function Awards() {
 
   return (
     <SectionWrapper id="reconhecimentos" number="08" label="Reconhecimentos">
-      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Reconhecimentos
       </h2>
 
@@ -45,7 +45,7 @@ export default function Awards() {
                 {award.year}
               </span>
             </div>
-            <h3 className="text-base font-bold text-navy-900 mb-3 leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
+            <h3 className="text-base font-bold text-heading mb-3 leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
               {award.title}
             </h3>
             <p className="text-sm text-muted flex items-center gap-1.5">

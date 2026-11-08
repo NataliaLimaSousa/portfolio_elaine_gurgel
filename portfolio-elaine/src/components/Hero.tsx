@@ -30,11 +30,11 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center overflow-hidden bg-white pt-20"
+      className="relative min-h-screen flex items-center overflow-hidden bg-surface pt-20"
     >
       {/* Watermark monogram */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40rem] font-extrabold text-navy-900 opacity-[0.04] select-none pointer-events-none leading-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40rem] font-extrabold text-heading opacity-[0.04] select-none pointer-events-none leading-none"
         aria-hidden="true"
         style={{ fontFamily: "var(--font-heading)" }}
       >
@@ -56,7 +56,7 @@ export default function Hero() {
           {/* Left column */}
           <div className="order-2 lg:order-1">
             <motion.p
-              className="text-mono text-sm text-teal-600 mb-6 tracking-wider"
+              className="text-mono text-sm text-accent mb-6 tracking-wider"
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
@@ -64,7 +64,7 @@ export default function Hero() {
             </motion.p>
 
             <motion.h1
-              className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold text-navy-900 leading-tight mb-6"
+              className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold text-heading leading-tight mb-6"
               style={{ fontFamily: "var(--font-heading)" }}
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -102,7 +102,7 @@ export default function Hero() {
             >
               {hero.badges.map((badge) => (
                 <span key={badge} className="badge">
-                  <span className="text-teal-600 font-bold">+</span>
+                  <span className="text-accent font-bold">+</span>
                   {badge}
                 </span>
               ))}
@@ -135,7 +135,7 @@ export default function Hero() {
                 />
               </svg>
 
-              <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-xl bg-slate-100">
+              <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-surface shadow-xl bg-chip">
                 <Image
                   src={hero.photo || "/elaine-photo.jpg"}
                   alt="Elaine Gurgel — Enfermeira especialista em Centro Cirúrgico e CME"

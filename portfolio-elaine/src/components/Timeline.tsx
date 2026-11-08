@@ -22,7 +22,7 @@ export default function Timeline() {
 
   return (
     <SectionWrapper id="trajetoria" number="03" label="Trajetória" className="bg-mint-50">
-      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Minha trajetória profissional
       </h2>
 
@@ -51,8 +51,8 @@ export default function Timeline() {
                 <div
                   className={`absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-[3px] z-10 ${
                     entry.isCurrent
-                      ? "bg-teal-600 border-teal-100"
-                      : "bg-white border-teal-600"
+                      ? "bg-teal-600 border-chip"
+                      : "bg-surface border-teal-600"
                   }`}
                   aria-hidden="true"
                 />
@@ -61,8 +61,8 @@ export default function Timeline() {
                 <div className={`ml-14 md:ml-0 md:w-[calc(50%-3rem)] ${isLeft ? "md:text-right" : "md:text-left"}`}>
                   <div className="card p-6 inline-block text-left w-full">
                     <div className="flex items-center gap-3 mb-2">
-                      <Briefcase size={18} className="text-teal-600 shrink-0" strokeWidth={1.5} />
-                      <span className="text-mono text-xs text-teal-700 font-medium">
+                      <Briefcase size={18} className="text-accent shrink-0" strokeWidth={1.5} />
+                      <span className="text-mono text-xs text-accent-strong font-medium">
                         {entry.period}
                       </span>
                       {entry.isCurrent && (
@@ -71,10 +71,10 @@ export default function Timeline() {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-lg font-bold text-navy-900 mb-1" style={{ fontFamily: "var(--font-heading)" }}>
+                    <h3 className="text-lg font-bold text-heading mb-1" style={{ fontFamily: "var(--font-heading)" }}>
                       {entry.role}
                     </h3>
-                    <p className="text-sm font-semibold text-teal-700 mb-2">
+                    <p className="text-sm font-semibold text-accent-strong mb-2">
                       {entry.institution}
                     </p>
                     <p className="text-sm text-muted leading-relaxed">

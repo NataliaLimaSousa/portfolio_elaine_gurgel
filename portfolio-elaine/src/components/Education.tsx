@@ -27,7 +27,7 @@ export default function Education() {
 
   return (
     <SectionWrapper id="formacao" number="04" label="Formação e certificações">
-      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Formação acadêmica
       </h2>
 
@@ -42,12 +42,12 @@ export default function Education() {
             transition={{ duration: 0.4, delay: i * 0.08 }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Award size={18} className="text-teal-600" strokeWidth={1.5} />
-              <span className="text-mono text-xs text-teal-700">
+              <Award size={18} className="text-accent" strokeWidth={1.5} />
+              <span className="text-mono text-xs text-accent-strong">
                 {entry.period}
               </span>
             </div>
-            <h3 className="text-base font-bold text-navy-900 mb-2 leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
+            <h3 className="text-base font-bold text-heading mb-2 leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
               {entry.title}
             </h3>
             <p className="text-sm text-muted">{entry.institution}</p>
@@ -56,7 +56,7 @@ export default function Education() {
       </div>
 
       {/* Accordion: Cursos complementares */}
-      <div className="card overflow-hidden border border-teal-100">
+      <div className="card overflow-hidden border border-chip">
         <button
           onClick={() => setShowCourses(!showCourses)}
           className="w-full flex items-center justify-between p-6 text-left hover:bg-mint-50 transition-colors cursor-pointer"
@@ -64,8 +64,8 @@ export default function Education() {
           aria-controls="courses-panel"
         >
           <div className="flex items-center gap-3">
-            <BookOpen size={22} className="text-teal-600" strokeWidth={1.5} />
-            <span className="text-lg font-bold text-navy-900" style={{ fontFamily: "var(--font-heading)" }}>
+            <BookOpen size={22} className="text-accent" strokeWidth={1.5} />
+            <span className="text-lg font-bold text-heading" style={{ fontFamily: "var(--font-heading)" }}>
               Cursos complementares
             </span>
             <span className="badge !text-xs">{courses.length} cursos</span>
@@ -74,7 +74,7 @@ export default function Education() {
             animate={{ rotate: showCourses ? 180 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <ChevronDown size={24} className="text-teal-600" />
+            <ChevronDown size={24} className="text-accent" />
           </motion.div>
         </button>
 
@@ -92,16 +92,16 @@ export default function Education() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-teal-100">
-                        <th className="text-left py-3 pr-4 text-mono text-xs text-teal-700 font-medium">Ano</th>
-                        <th className="text-left py-3 pr-4 text-mono text-xs text-teal-700 font-medium">Curso</th>
-                        <th className="text-left py-3 pr-4 text-mono text-xs text-teal-700 font-medium">Instituição</th>
-                        <th className="text-left py-3 text-mono text-xs text-teal-700 font-medium">Carga</th>
+                      <tr className="border-b border-chip">
+                        <th className="text-left py-3 pr-4 text-mono text-xs text-accent-strong font-medium">Ano</th>
+                        <th className="text-left py-3 pr-4 text-mono text-xs text-accent-strong font-medium">Curso</th>
+                        <th className="text-left py-3 pr-4 text-mono text-xs text-accent-strong font-medium">Instituição</th>
+                        <th className="text-left py-3 text-mono text-xs text-accent-strong font-medium">Carga</th>
                       </tr>
                     </thead>
                     <tbody>
                       {courses.map((course, i) => (
-                        <tr key={i} className="border-b border-teal-100/50 last:border-0 hover:bg-mint-50/50">
+                        <tr key={i} className="border-b border-chip last:border-0 hover:bg-mint-50/50">
                           <td className="py-3 pr-4 text-mono text-xs text-muted whitespace-nowrap">{course.year}</td>
                           <td className="py-3 pr-4 text-ink">{course.title}</td>
                           <td className="py-3 pr-4 text-muted">{course.institution}</td>

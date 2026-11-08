@@ -44,7 +44,7 @@ export default function Talks() {
 
   return (
     <SectionWrapper id="palestras" number="06" label="Palestras e produção científica">
-      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-heading mb-4" style={{ fontFamily: "var(--font-heading)" }}>
         Palestras e produção científica
       </h2>
 
@@ -72,7 +72,7 @@ export default function Talks() {
             className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
               activeFilter === filter
                 ? "bg-navy-700 text-white"
-                : "bg-teal-100 text-teal-700 hover:bg-teal-600 hover:text-white"
+                : "bg-chip text-accent-strong hover:bg-teal-600 hover:text-white"
             }`}
           >
             {filter}
@@ -94,15 +94,15 @@ export default function Talks() {
               layout
             >
               <div className="flex items-center gap-3 md:w-32 shrink-0">
-                <Icon size={18} className="text-teal-600" strokeWidth={1.5} />
-                <span className="text-mono text-xs text-teal-700">{talk.year}</span>
+                <Icon size={18} className="text-accent" strokeWidth={1.5} />
+                <span className="text-mono text-xs text-accent-strong">{talk.year}</span>
               </div>
               <div className="flex-1">
                 <p className="text-ink font-semibold text-sm leading-snug">{talk.title}</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="badge !text-xs">{talk.format}</span>
-                <span className="badge !text-xs !bg-navy-700/10 !text-navy-700">{talk.filter}</span>
+                <span className="badge !text-xs !bg-navy-700/10 !text-accent-strong">{talk.filter}</span>
               </div>
             </motion.div>
           );

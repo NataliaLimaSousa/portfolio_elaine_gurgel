@@ -22,7 +22,7 @@ export default function Events() {
 
   return (
     <SectionWrapper id="eventos" number="07" label="Eventos organizados" className="bg-mint-50">
-      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Eventos organizados
       </h2>
 
@@ -37,12 +37,12 @@ export default function Events() {
             transition={{ duration: 0.4, delay: i * 0.06 }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Calendar size={16} className="text-teal-600" strokeWidth={1.5} />
-              <span className="text-mono text-xs text-teal-700 font-medium">
+              <Calendar size={16} className="text-accent" strokeWidth={1.5} />
+              <span className="text-mono text-xs text-accent-strong font-medium">
                 {event.year}
               </span>
             </div>
-            <h3 className="text-base font-bold text-navy-900 leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
+            <h3 className="text-base font-bold text-heading leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
               {event.title}
             </h3>
           </motion.div>

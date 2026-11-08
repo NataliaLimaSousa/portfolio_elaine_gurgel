@@ -38,7 +38,7 @@ export default function Expertise() {
 
   return (
     <SectionWrapper id="atuacao" number="02" label="Áreas de atuação">
-      <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-12" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Como posso ajudar
       </h2>
 
@@ -55,14 +55,14 @@ export default function Expertise() {
               transition={{ duration: 0.4, delay: i * 0.08 }}
               whileHover={prefersReduced ? {} : { y: -4 }}
             >
-              <div className="w-14 h-14 rounded-2xl bg-teal-100 flex items-center justify-center mb-5 group-hover:bg-teal-600 transition-colors duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-chip flex items-center justify-center mb-5 group-hover:bg-teal-600 transition-colors duration-300">
                 <Icon
                   size={28}
-                  className="text-teal-600 group-hover:text-white transition-colors duration-300"
+                  className="text-accent group-hover:text-white transition-colors duration-300"
                   strokeWidth={1.5}
                 />
               </div>
-              <h3 className="text-xl font-bold text-navy-900 mb-2" style={{ fontFamily: "var(--font-heading)" }}>
+              <h3 className="text-xl font-bold text-heading mb-2" style={{ fontFamily: "var(--font-heading)" }}>
                 {card.title}
               </h3>
               <p className="text-muted text-sm leading-relaxed">

@@ -45,7 +45,7 @@ export default function Contact() {
   return (
     <section id="contato" className="bg-navy-900 py-20 md:py-28 px-6 md:px-12 lg:px-20">
       <div className="mx-auto max-w-7xl">
-        <p className="section-label !text-teal-600">09 — Contato</p>
+        <p className="section-label !text-accent">09 — Contato</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Left: info */}
@@ -85,7 +85,7 @@ export default function Contact() {
                 className="flex items-center gap-4 text-white hover:text-teal-100 transition-colors group"
               >
                 <div className="w-12 h-12 rounded-xl bg-navy-700 flex items-center justify-center group-hover:bg-teal-600 transition-colors">
-                  <Mail size={22} className="text-teal-600 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                  <Mail size={22} className="text-accent group-hover:text-white transition-colors" strokeWidth={1.5} />
                 </div>
                 <div>
                   <p className="text-xs text-teal-100/60 text-mono">E-mail</p>
@@ -102,7 +102,7 @@ export default function Contact() {
               >
                 <div className="w-12 h-12 rounded-xl bg-navy-700 flex items-center justify-center group-hover:bg-teal-600 transition-colors">
                   <svg
-                    className="w-5 h-5 text-teal-600 group-hover:text-white transition-colors fill-current"
+                    className="w-5 h-5 text-accent group-hover:text-white transition-colors fill-current"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                   >
@@ -123,7 +123,7 @@ export default function Contact() {
                 className="flex items-center gap-4 text-white hover:text-teal-100 transition-colors group"
               >
                 <div className="w-12 h-12 rounded-xl bg-navy-700 flex items-center justify-center group-hover:bg-teal-600 transition-colors">
-                  <ExternalLink size={22} className="text-teal-600 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                  <ExternalLink size={22} className="text-accent group-hover:text-white transition-colors" strokeWidth={1.5} />
                 </div>
                 <div>
                   <p className="text-xs text-teal-100/60 text-mono">Currículo Lattes</p>
@@ -142,7 +142,7 @@ export default function Contact() {
           >
             {submitted ? (
               <div className="flex flex-col items-center justify-center h-full text-center py-16">
-                <CheckCircle size={64} className="text-teal-600 mb-6" />
+                <CheckCircle size={64} className="text-accent mb-6" />
                 <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-heading)" }}>
                   Mensagem enviada!
                 </h3>

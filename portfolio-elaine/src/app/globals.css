@@ -1,5 +1,36 @@
 @import "tailwindcss";
 
+/* ── Tema claro / escuro ───────────────────────────────
+   Os tokens semânticos abaixo mudam conforme html[data-theme].
+   Fontes e tamanhos permanecem idênticos nos dois temas. */
+:root {
+  color-scheme: light;
+  --surface: #FBFDFC;
+  --mint: #E8F1EE;
+  --chip: #D3E9E5;
+  --heading: #16304D;
+  --ink: #24303D;
+  --muted: #5B6B78;
+  --accent: #2A8C82;
+  --accent-strong: #1E7068;
+  --card-shadow: 0 8px 24px rgba(22, 48, 77, 0.08);
+  --card-shadow-hover: 0 12px 32px rgba(22, 48, 77, 0.12);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --surface: #0D1824;
+  --mint: #132235;
+  --chip: #1A3B43;
+  --heading: #EAF2F7;
+  --ink: #D5E0E9;
+  --muted: #9DB0BF;
+  --accent: #4FB8AC;
+  --accent-strong: #6FCDC2;
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --card-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
 /* ── Design Tokens ─────────────────────────────────── */
 @theme inline {
   /* Palette — from CUIDAR+ brand */
@@ -8,10 +39,15 @@
   --color-teal-700: #1E7068;
   --color-teal-600: #2A8C82;
   --color-teal-100: #D3E9E5;
-  --color-mint-50: #E8F1EE;
+  --color-mint-50: var(--mint);
   --color-white: #FBFDFC;
-  --color-ink: #24303D;
-  --color-muted: #5B6B78;
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-chip: var(--chip);
+  --color-heading: var(--heading);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
   --color-sand-400: #C8A96A;
 
   /* Font families */
@@ -35,7 +71,7 @@ html {
 body {
   font-family: var(--font-body), sans-serif;
   color: var(--color-ink);
-  background: var(--color-white);
+  background: var(--color-surface);
   font-size: 18px;
   line-height: 1.667;
   -webkit-font-smoothing: antialiased;
@@ -45,7 +81,7 @@ body {
 /* ── Typography Scale ──────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading), sans-serif;
-  color: var(--color-navy-900);
+  color: var(--color-heading);
   line-height: 1.14;
 }
 
@@ -60,20 +96,20 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-teal-600);
+  color: var(--color-accent);
   margin-bottom: 0.75rem;
 }
 
 /* ── Card Style ────────────────────────────────────── */
 .card {
   border-radius: 16px;
-  background: var(--color-white);
-  box-shadow: 0 8px 24px rgba(22, 48, 77, 0.08);
+  background: var(--color-surface);
+  box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 12px 32px rgba(22, 48, 77, 0.12);
+  box-shadow: var(--card-shadow-hover);
   border-color: var(--color-teal-600);
 }
 
@@ -131,11 +167,49 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.375rem;
   padding: 0.375rem 1rem;
   border-radius: 9999px;
-  background: var(--color-teal-100);
-  color: var(--color-teal-700);
+  background: var(--color-chip);
+  color: var(--color-accent-strong);
   font-family: var(--font-mono), monospace;
   font-weight: 500;
   font-size: 0.8125rem;
+}
+
+/* ── Ajustes do tema escuro ────────────────────────── */
+html[data-theme="dark"] .btn-primary {
+  background: var(--color-teal-700);
+}
+
+html[data-theme="dark"] .btn-primary:hover {
+  background: var(--color-teal-600);
+}
+
+html[data-theme="dark"] .btn-secondary {
+  color: var(--color-heading);
+  border-color: var(--color-heading);
+}
+
+html[data-theme="dark"] .btn-secondary:hover {
+  background: var(--color-teal-700);
+  border-color: var(--color-teal-700);
+  color: #fff;
+}
+
+/* Logo escura vira branca no tema escuro */
+html[data-theme="dark"] .logo-adaptive {
+  filter: brightness(0) invert(1);
+}
+
+/* ── Botão de tema (sol / lua) ─────────────────────── */
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+body,
+.card,
+.btn-primary,
+.btn-secondary {
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* ── Placeholder style ─────────────────────────────── */
@@ -176,8 +250,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Selection ─────────────────────────────────────── */
 ::selection {
-  background: var(--color-teal-100);
-  color: var(--color-navy-900);
+  background: var(--color-chip);
+  color: var(--color-heading);
 }
 
 /* ── WhatsApp float ────────────────────────────────── */
