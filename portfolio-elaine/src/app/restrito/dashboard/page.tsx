@@ -124,10 +124,10 @@ export default function DashboardPage() {
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      router.push("/restrito");
+      router.push("/");
       router.refresh();
     } catch {
-      router.push("/restrito");
+      router.push("/");
     }
   };
 
