@@ -37,7 +37,7 @@ export default function Expertise() {
   }
 
   return (
-    <SectionWrapper id="atuacao" number="02" label="Áreas de atuação">
+    <SectionWrapper id="atuacao" number="04" label="Áreas de atuação">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Como posso ajudar
       </h2>

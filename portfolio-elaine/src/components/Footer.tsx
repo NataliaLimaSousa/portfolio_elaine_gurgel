@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Lock } from "lucide-react";
 import { footer as defaultFooter, contact as defaultContact } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { hasPending, HIDE_PENDING } from "@/lib/pending";
 
 export default function Footer() {
   let footer = defaultFooter;
@@ -40,13 +41,16 @@ export default function Footer() {
                 {footer.tagline}
               </p>
               <p className="text-mono text-xs text-teal-100/70">
-                {footer.author} · {footer.coren}
+                {footer.author}
+                {footer.coren && !(HIDE_PENDING && hasPending(footer.coren)) && <> · {footer.coren}</>}
               </p>
             </div>
           </div>
 
           {/* Quick links */}
           <div className="flex flex-wrap justify-center gap-6 text-sm text-teal-100/80">
+            <a href="#paciente" className="hover:text-white transition-colors">Pacientes</a>
+            <a href="#gestao" className="hover:text-white transition-colors">Gestão em saúde</a>
             <a href="#sobre" className="hover:text-white transition-colors">Sobre</a>
             <a href="#atuacao" className="hover:text-white transition-colors">Atuação</a>
             <a href="#trajetoria" className="hover:text-white transition-colors">Trajetória</a>
@@ -76,12 +80,9 @@ export default function Footer() {
             >
               LinkedIn
             </a>
-            <button
-              onClick={() => alert("Aviso de Privacidade: Este site não utiliza cookies invasivos de rastreamento de dados de terceiros em conformidade com a LGPD.")}
-              className="hover:text-teal-100 transition-colors underline cursor-pointer"
-            >
-              Aviso de privacidade
-            </button>
+            <Link href="/privacidade" className="hover:text-teal-100 transition-colors underline">
+              Política de privacidade
+            </Link>
 
             {/* Link bem restrito para a Área Restrita */}
             <Link

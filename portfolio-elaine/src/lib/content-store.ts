@@ -28,6 +28,14 @@ export function getDefaultContent(): PortfolioData {
       },
       badges: [...originalContent.hero.badges],
     },
+    egCuidar: {
+      ...originalContent.egCuidar,
+      phases: originalContent.egCuidar.phases.map((ph) => ({ ...ph, items: [...ph.items] })),
+    },
+    management: {
+      ...originalContent.management,
+      services: originalContent.management.services.map((sv) => ({ ...sv })),
+    },
     stats: originalContent.stats.map((s) => ({ ...s })),
     about: {
       sectionTitle: "Quem sou eu",
@@ -60,6 +68,8 @@ export function getDefaultContent(): PortfolioData {
       lattesUrl: originalContent.contact.lattesUrl,
       whatsapp: originalContent.contact.whatsapp,
       whatsappNumber: originalContent.contact.whatsappNumber || "558599406173",
+      whatsappPatientMessage: originalContent.contact.whatsappPatientMessage,
+      whatsappManagerMessage: originalContent.contact.whatsappManagerMessage,
       reasons: [...originalContent.contactForm.reasons],
     },
     footer: {
@@ -80,6 +90,8 @@ function mergeWithDefaults(parsed: Partial<PortfolioData>): PortfolioData {
     header: { ...defaults.header, ...(parsed.header || {}) },
     hero: { ...defaults.hero, ...(parsed.hero || {}) },
     about: { ...defaults.about, ...(parsed.about || {}) },
+    egCuidar: { ...defaults.egCuidar!, ...(parsed.egCuidar || {}) },
+    management: { ...defaults.management!, ...(parsed.management || {}) },
     teaching: { ...defaults.teaching, ...(parsed.teaching || {}) },
     contact: { ...defaults.contact, ...(parsed.contact || {}) },
     footer: { ...defaults.footer, ...(parsed.footer || {}) },

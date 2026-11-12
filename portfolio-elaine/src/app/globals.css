@@ -79,10 +79,13 @@ body {
 }
 
 /* ── Typography Scale ──────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading), sans-serif;
-  color: var(--color-heading);
-  line-height: 1.14;
+/* Em @layer base para que classes utilitárias (ex.: text-white em fundos escuros) tenham prioridade */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif;
+    color: var(--color-heading);
+    line-height: 1.14;
+  }
 }
 
 .text-mono {

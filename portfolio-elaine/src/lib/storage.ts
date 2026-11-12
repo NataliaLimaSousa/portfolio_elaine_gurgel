@@ -78,3 +78,29 @@ export async function writeDocument<T>(key: string, value: T): Promise<void> {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   fs.writeFileSync(filePathFor(key), JSON.stringify(value, null, 2), "utf-8");
 }
+
+// ── Contador com expiração (limite de envios por visitante) ─────────
+const memoryCounters = new Map<string, { count: number; expiresAt: number }>();
+
+/**
+ * Incrementa um contador que expira após `ttlSeconds` e devolve o novo valor.
+ * Com Redis, o contador é compartilhado entre todas as instâncias do servidor;
+ * sem Redis (desenvolvimento local), fica em memória.
+ */
+export async function incrementWithExpiry(key: string, ttlSeconds: number): Promise<number> {
+  if (isRedisConfigured()) {
+    const redisKey = KEY_PREFIX + "counter:" + key;
+    const count = Number(await redisCommand(["INCR", redisKey]));
+    if (count === 1) await redisCommand(["EXPIRE", redisKey, ttlSeconds]);
+    return count;
+  }
+
+  const now = Date.now();
+  const current = memoryCounters.get(key);
+  if (!current || current.expiresAt < now) {
+    memoryCounters.set(key, { count: 1, expiresAt: now + ttlSeconds * 1000 });
+    return 1;
+  }
+  current.count += 1;
+  return current.count;
+}

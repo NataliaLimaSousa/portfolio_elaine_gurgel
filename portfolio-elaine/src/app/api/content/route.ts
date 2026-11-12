@@ -3,10 +3,13 @@ import { StorageNotConfiguredError } from "@/lib/storage";
 import { getContent, saveContent } from "@/lib/content-store";
 import { getCurrentSessionUser } from "@/lib/auth";
 import { PortfolioData } from "@/lib/types";
+import { toPublicContent } from "@/lib/pending";
 
 export async function GET() {
   const content = await getContent();
-  return NextResponse.json(content, {
+  // Visitantes recebem só o conteúdo confirmado; quem está logado no painel recebe tudo
+  const user = await getCurrentSessionUser();
+  return NextResponse.json(user ? content : toPublicContent(content), {
     headers: {
       "Cache-Control": "no-store, max-age=0",
     },

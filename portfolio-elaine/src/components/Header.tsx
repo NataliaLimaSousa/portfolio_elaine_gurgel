@@ -7,8 +7,9 @@ import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
+  { label: "Pacientes", href: "#paciente" },
+  { label: "Gestão", href: "#gestao" },
   { label: "Sobre", href: "#sobre" },
-  { label: "Atuação", href: "#atuacao" },
   { label: "Trajetória", href: "#trajetoria" },
   { label: "Formação", href: "#formacao" },
   { label: "Palestras", href: "#palestras" },
@@ -46,7 +47,7 @@ export default function Header() {
             : "bg-transparent"
         }`}
       >
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12 lg:px-20 h-20">
+        <nav aria-label="Principal" className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12 lg:px-20 h-20">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 shrink-0" aria-label="CUIDAR+ — Início">
             <Image
@@ -60,7 +61,7 @@ export default function Header() {
           </a>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-8">
+          <ul className="hidden lg:flex items-center gap-5 xl:gap-8">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <a

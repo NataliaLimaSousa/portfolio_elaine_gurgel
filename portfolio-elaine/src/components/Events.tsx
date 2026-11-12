@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import { events as defaultEvents } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { publicOnly } from "@/lib/pending";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
@@ -20,8 +21,10 @@ export default function Events() {
     // Fallback
   }
 
+  events = publicOnly(events, (e) => [e.year, e.title]);
+
   return (
-    <SectionWrapper id="eventos" number="07" label="Eventos organizados" className="bg-mint-50">
+    <SectionWrapper id="eventos" number="09" label="Eventos organizados" className="bg-mint-50">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Eventos organizados
       </h2>

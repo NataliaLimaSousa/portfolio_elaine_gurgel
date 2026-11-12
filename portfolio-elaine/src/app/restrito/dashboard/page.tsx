@@ -26,8 +26,10 @@ import {
   Briefcase,
   Layers,
   HelpCircle,
+  Inbox,
 } from "lucide-react";
 import { PortfolioData } from "@/lib/types";
+import MessagesPanel from "./MessagesPanel";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -189,6 +191,7 @@ export default function DashboardPage() {
     { id: "talks", label: "Palestras & Trabalhos", icon: Mic },
     { id: "events", label: "Eventos Organizados", icon: Calendar },
     { id: "awards", label: "Reconhecimentos", icon: Award },
+    { id: "messages", label: "Mensagens recebidas", icon: Inbox },
     { id: "contact", label: "Contato & WhatsApp", icon: Phone },
     { id: "footer", label: "Rodapé & Identidade", icon: HelpCircle },
   ];
@@ -1753,6 +1756,8 @@ export default function DashboardPage() {
           )}
 
           {/* TAB: FOOTER (RODAPÉ) */}
+          {activeTab === "messages" && <MessagesPanel />}
+
           {activeTab === "footer" && (
             <div className="space-y-6 max-w-4xl">
               <div>

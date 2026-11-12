@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowDown, MessageCircle } from "lucide-react";
+import { HeartHandshake, Building2 } from "lucide-react";
 import Image from "next/image";
 import { hero as defaultHero, HeroContent } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
@@ -81,18 +81,23 @@ export default function Hero() {
             </motion.p>
 
             <motion.div
-              className="flex flex-wrap gap-4 mb-8"
+              className="mb-8"
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <a href={hero.ctaPrimary.href} className="btn-primary">
-                {hero.ctaPrimary.text}
-                <ArrowDown size={18} />
-              </a>
-              <a href={hero.ctaSecondary.href} className="btn-secondary">
-                <MessageCircle size={18} />
-                {hero.ctaSecondary.text}
-              </a>
+              <p className="text-mono text-sm text-accent mb-3 tracking-wider">
+                Como posso ajudar você?
+              </p>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+                <a href={hero.ctaPrimary.href} className="btn-primary justify-center">
+                  <HeartHandshake size={18} aria-hidden="true" />
+                  {hero.ctaPrimary.text}
+                </a>
+                <a href={hero.ctaSecondary.href} className="btn-secondary justify-center">
+                  <Building2 size={18} aria-hidden="true" />
+                  {hero.ctaSecondary.text}
+                </a>
+              </div>
             </motion.div>
 
             <motion.div

@@ -20,7 +20,7 @@ export default function About() {
   }
 
   return (
-    <SectionWrapper id="sobre" number="01" label="Sobre" className="bg-mint-50">
+    <SectionWrapper id="sobre" number="03" label="Sobre" className="bg-mint-50">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
         {/* Text */}
         <div className="lg:col-span-3">

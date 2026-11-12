@@ -9,6 +9,7 @@ import {
   talkHighlights as defaultHighlights,
 } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { publicOnly } from "@/lib/pending";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
@@ -37,13 +38,15 @@ export default function Talks() {
     // Fallback
   }
 
+  talks = publicOnly(talks, (t) => [t.year, t.title]);
+
   const filteredTalks =
     activeFilter === "Todos"
       ? talks
       : talks.filter((t) => t.filter === activeFilter);
 
   return (
-    <SectionWrapper id="palestras" number="06" label="Palestras e produção científica">
+    <SectionWrapper id="palestras" number="08" label="Palestras e produção científica">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-4" style={{ fontFamily: "var(--font-heading)" }}>
         Palestras e produção científica
       </h2>

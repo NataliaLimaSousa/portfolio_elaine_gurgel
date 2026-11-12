@@ -26,7 +26,7 @@ export default function Education() {
   }
 
   return (
-    <SectionWrapper id="formacao" number="04" label="Formação e certificações">
+    <SectionWrapper id="formacao" number="06" label="Formação e certificações">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Formação acadêmica
       </h2>

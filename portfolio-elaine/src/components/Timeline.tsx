@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 import { timeline as defaultTimeline } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { publicOnly } from "@/lib/pending";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SectionWrapper from "./SectionWrapper";
 
@@ -20,8 +21,10 @@ export default function Timeline() {
     // Fallback padrão
   }
 
+  timeline = publicOnly(timeline, (t) => [t.period, t.institution, t.role, t.highlights]);
+
   return (
-    <SectionWrapper id="trajetoria" number="03" label="Trajetória" className="bg-mint-50">
+    <SectionWrapper id="trajetoria" number="05" label="Trajetória" className="bg-mint-50">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Minha trajetória profissional
       </h2>

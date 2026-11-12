@@ -33,7 +33,7 @@ export default function SectionWrapper({
       <div className="mx-auto max-w-7xl">
         {label && (
           <p className="section-label">
-            {number} — {label}
+            {number ? `${number} — ` : ""}{label}
           </p>
         )}
         {children}

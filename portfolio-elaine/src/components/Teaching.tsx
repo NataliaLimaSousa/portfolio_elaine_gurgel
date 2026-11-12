@@ -18,7 +18,7 @@ export default function Teaching() {
   }
 
   return (
-    <SectionWrapper id="docencia" number="05" label="Docência" className="bg-mint-50">
+    <SectionWrapper id="docencia" number="07" label="Docência" className="bg-mint-50">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         {teaching.sectionTitle || "Docência e educação"}
       </h2>

@@ -21,7 +21,7 @@ export default function Awards() {
   }
 
   return (
-    <SectionWrapper id="reconhecimentos" number="08" label="Reconhecimentos">
+    <SectionWrapper id="reconhecimentos" number="10" label="Reconhecimentos">
       <h2 className="text-3xl md:text-4xl font-bold text-heading mb-12" style={{ fontFamily: "var(--font-heading)" }}>
         Reconhecimentos
       </h2>

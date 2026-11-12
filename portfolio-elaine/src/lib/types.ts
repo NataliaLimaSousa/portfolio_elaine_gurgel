@@ -92,6 +92,8 @@ export interface ContactData {
   lattesUrl: string;
   whatsapp: string;
   whatsappNumber: string;
+  whatsappPatientMessage?: string;
+  whatsappManagerMessage?: string;
   reasons: string[];
 }
 
@@ -109,9 +111,42 @@ export interface HeaderData {
   ctaHref?: string;
 }
 
+export interface ServicePhase {
+  phase: string;
+  icon: string;
+  summary: string;
+  items: string[];
+}
+
+export interface EgCuidarData {
+  label: string;
+  title: string;
+  intro: string;
+  phases: ServicePhase[];
+  note: string;
+  ctaText: string;
+}
+
+export interface ManagementServiceItem {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface ManagementData {
+  label: string;
+  title: string;
+  intro: string;
+  services: ManagementServiceItem[];
+  note: string;
+  ctaText: string;
+}
+
 export interface PortfolioData {
   header: HeaderData;
   hero: HeroData;
+  egCuidar?: EgCuidarData;
+  management?: ManagementData;
   stats: Stat[];
   about: AboutData;
   expertise: ExpertiseCard[];

@@ -60,6 +60,8 @@ export interface ContactInfo {
   lattesUrl: string;
   whatsapp: string;
   whatsappNumber?: string;
+  whatsappPatientMessage?: string;
+  whatsappManagerMessage?: string;
 }
 
 export interface HeroContent {
@@ -86,23 +88,138 @@ export interface TeachingContent {
   cta: string;
 }
 
+export interface ServicePhase {
+  phase: string;
+  icon: string;
+  summary: string;
+  items: string[];
+}
+
+export interface EgCuidarContent {
+  label: string;
+  title: string;
+  intro: string;
+  phases: ServicePhase[];
+  note: string;
+  ctaText: string;
+}
+
+export interface ManagementService {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface ManagementContent {
+  label: string;
+  title: string;
+  intro: string;
+  services: ManagementService[];
+  note: string;
+  ctaText: string;
+}
+
 // ── Hero ──────────────────────────────────────────
 export const hero: HeroContent = {
-  label: "por Elaine Gurgel · Enfermagem perioperatória",
-  title: "20 anos conectando cuidado, ciência e segurança no bloco cirúrgico.",
+  label: "Elaine Gurgel · CUIDAR+",
+  title: "Excelência no cuidado. Inteligência na gestão.",
   subtitle:
-    "Enfermeira especialista SOBECC em Centro Cirúrgico, CME e Recuperação Anestésica. Lidero a Central de Material e Esterilização do Hospital São Carlos (Rede D'Or) e formo novos especialistas na pós-graduação da UNIFOR.",
+    "Enfermeira especialista SOBECC em Centro Cirúrgico, CME e Recuperação Anestésica, com 20 anos no Hospital São Carlos. Ajudo pacientes a atravessar a jornada cirúrgica com segurança e apoio, e médicos e gestores a organizar a gestão de suas clínicas.",
   photo: "/elaine-photo.jpg",
-  ctaPrimary: { text: "Conheça minha trajetória", href: "#trajetoria" },
-  ctaSecondary: {
-    text: "Convide para palestra ou consultoria",
-    href: "#contato",
-  },
+  ctaPrimary: { text: "Sou paciente", href: "#paciente" },
+  ctaSecondary: { text: "Sou médico ou gestor", href: "#gestao" },
   badges: [
     "Especialista SOBECC",
     "Docente UNIFOR",
     "20 anos no Hospital São Carlos",
   ],
+};
+
+// ── EG CUIDAR+ · Navegação cirúrgica (pacientes) ──
+export const egCuidar: EgCuidarContent = {
+  label: "Para pacientes",
+  title: "EG CUIDAR+ · Navegação cirúrgica",
+  intro:
+    "Uma cirurgia envolve muitas etapas, prazos e dúvidas. A navegação cirúrgica é um acompanhamento de enfermagem que traduz as orientações da sua equipe médica e organiza cada fase da sua jornada, com escuta e clareza.",
+  phases: [
+    {
+      phase: "Pré-operatório",
+      icon: "ClipboardList",
+      summary: "Preparar com segurança, tirando dúvidas antes do grande dia.",
+      items: [
+        "Explicação clara do caminho até a cirurgia, em linguagem simples",
+        "Organização do preparo conforme a orientação da sua equipe médica",
+        "Checagem de exames, documentos e agendamentos",
+        "Acolhimento das dúvidas e da ansiedade do paciente e da família",
+      ],
+    },
+    {
+      phase: "Trans-operatório",
+      icon: "ShieldCheck",
+      summary: "Tranquilidade para você e para quem espera por você.",
+      items: [
+        "Orientação sobre o fluxo do dia da cirurgia e o que esperar em cada etapa",
+        "Apoio à comunicação com a família durante o procedimento",
+        "Olhar de segurança do paciente, baseado na experiência em centro cirúrgico",
+      ],
+    },
+    {
+      phase: "Pós-operatório",
+      icon: "HeartHandshake",
+      summary: "Recuperação com orientação e apoio, sem se sentir sozinho.",
+      items: [
+        "Revisão das orientações de alta e dos cuidados em casa prescritos pela equipe",
+        "Acompanhamento da rotina de recuperação",
+        "Orientação sobre quando procurar a equipe médica ou um serviço de urgência",
+      ],
+    },
+  ],
+  note:
+    "A navegação cirúrgica complementa, e não substitui, o atendimento e as condutas da sua equipe médica. Não oferece diagnóstico nem prescrição.",
+  ctaText: "Falar no WhatsApp como paciente",
+};
+
+// ── Gestão Estratégica em Saúde (médicos e gestores) ──
+export const management: ManagementContent = {
+  label: "Para médicos e gestores",
+  title: "Gestão Estratégica em Saúde",
+  intro:
+    "Consultórios e clínicas crescem melhor quando assistência e gestão caminham juntas. Apoio médicos e gestores a organizar processos, equipes e números, com a visão de quem vive a rotina de um ambiente hospitalar complexo.",
+  services: [
+    {
+      icon: "Wallet",
+      title: "Gestão financeira",
+      description:
+        "Organização de custos, receitas e fluxo de caixa para decisões mais seguras no dia a dia da clínica.",
+    },
+    {
+      icon: "Gauge",
+      title: "Produtividade e processos",
+      description:
+        "Mapeamento de rotinas, padronização de processos e indicadores para ganhar eficiência sem perder qualidade assistencial.",
+    },
+    {
+      icon: "Compass",
+      title: "Planejamento estratégico",
+      description:
+        "Definição de metas, prioridades e plano de ação alinhados ao propósito e ao momento do seu negócio.",
+    },
+    {
+      icon: "Users",
+      title: "Liderança de equipes",
+      description:
+        "Desenvolvimento de lideranças, comunicação e engajamento da equipe assistencial e administrativa.",
+    },
+    {
+      icon: "TrendingUp",
+      title: "Crescimento de consultórios",
+      description:
+        "Estratégias para fortalecer a presença, a organização e a sustentabilidade de consultórios e clínicas.",
+    },
+  ],
+  note:
+    "Cada projeto é desenhado a partir de um diagnóstico da sua realidade. Não há fórmulas prontas nem promessas de resultado.",
+  ctaText: "Falar no WhatsApp como médico ou gestor",
 };
 
 // ── Números ───────────────────────────────────────
@@ -124,7 +241,8 @@ export const about: AboutContent = {
   paragraphs: [
     "Sou enfermeira formada pela Universidade de Fortaleza (UNIFOR) e especialista em Centro Cirúrgico, Central de Material e Esterilização e Recuperação Anestésica pela SOBECC, título revalidado por dois triênios.",
     "Há 20 anos dedico minha carreira ao bloco cirúrgico do Hospital São Carlos, em Fortaleza. Comecei na unidade de internação, passei mais de uma década no centro cirúrgico — onde coordenei por 10 anos o transoperatório do transplante hepático — e hoje lidero a CME.",
-    "Acredito que a segurança do paciente começa no detalhe: no instrumental bem processado, no indicador bem medido, na equipe bem treinada. É isso que levo para a gestão, para a sala de aula e para cada palestra.",
+    "Ao longo desse caminho, a gestão de pessoas, processos e projetos passou a ser parte central do meu trabalho. Foi dessa experiência que nasceu a CUIDAR+, iniciativa em que reúno duas frentes: a navegação cirúrgica, que acompanha o paciente do pré ao pós-operatório, e a gestão estratégica em saúde, voltada a médicos e gestores de consultórios e clínicas.",
+    "Acredito que a segurança do paciente começa no detalhe: no instrumental bem processado, no indicador bem medido, na equipe bem treinada. É isso que levo para a gestão, para a sala de aula, para cada palestra e para cada pessoa que atendo.",
   ],
   quote: "Segurança do paciente começa no detalhe que ninguém vê.",
   quoteAuthor: "Elaine Gurgel",
@@ -377,18 +495,22 @@ export const contact: ContactInfo = {
   lattesUrl: "https://lattes.cnpq.br/0433468117601000",
   whatsapp: "(85) 99940-6173",
   whatsappNumber: "558599406173",
+  whatsappPatientMessage:
+    "Olá, Elaine! Sou paciente e gostaria de saber mais sobre a navegação cirúrgica EG CUIDAR+.",
+  whatsappManagerMessage:
+    "Olá, Elaine! Sou médico(a) ou gestor(a) e gostaria de conversar sobre gestão estratégica para minha clínica ou consultório.",
 };
 
 export const contactForm = {
-  title: "Vamos conectar cuidado e dedicação?",
+  title: "Vamos conversar?",
   subtitle:
-    "Convites para palestras, aulas, consultoria em CME ou parcerias em assistência cirúrgica. Respondo pessoalmente.",
+    "Pacientes, médicos e gestores: escolha o canal que preferir. Também recebo convites para palestras, aulas e consultoria em CME. Respondo pessoalmente.",
   reasons: [
-    "Palestra",
-    "Docência",
+    "Sou paciente (navegação cirúrgica)",
+    "Sou médico ou gestor (gestão em saúde)",
+    "Palestra ou docência",
     "Consultoria em CME",
-    "Assistência cirúrgica",
-    "Outro",
+    "Outro assunto",
   ],
 };
 
