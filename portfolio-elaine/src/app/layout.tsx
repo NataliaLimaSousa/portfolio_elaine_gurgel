@@ -54,13 +54,7 @@ export const metadata: Metadata = {
     "Fortaleza",
   ],
   alternates: { canonical: "/" },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    apple: "/favicon.svg",
-  },
+  // Ícones: arquivos src/app/favicon.ico, icon.png e apple-icon.png (convenção do Next.js)
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
