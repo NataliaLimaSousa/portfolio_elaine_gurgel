@@ -1,7 +1,7 @@
 "use client";
 
-import { Smartphone } from "lucide-react";
 import { contact as defaultContact } from "@/content/portfolio";
+import WhatsAppIcon from "./WhatsAppIcon";
 import { usePortfolio } from "@/context/PortfolioContext";
 
 interface WhatsAppButtonProps {
@@ -41,8 +41,8 @@ export default function WhatsAppButton({ customPhone, customText }: WhatsAppButt
       title="Falar via WhatsApp / Celular: (85) 99940-6173"
     >
       <div className="relative flex items-center justify-center">
-        {/* Símbolo de comunicação por celular */}
-        <Smartphone size={30} className="group-hover:scale-110 transition-transform text-white stroke-[2.2]" />
+        {/* Logotipo oficial do WhatsApp */}
+        <WhatsAppIcon size={34} className="group-hover:scale-110 transition-transform text-white" />
 
         {/* Indicador de onda de chamada / status ativo */}
         <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
