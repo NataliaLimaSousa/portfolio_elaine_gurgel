@@ -3,22 +3,30 @@
 import { motion } from "framer-motion";
 import { ArrowDown, MessageCircle } from "lucide-react";
 import Image from "next/image";
-import { hero as defaultHero, HeroContent } from "@/content/portfolio";
+import { hero as defaultHero, contact as defaultContact, HeroContent } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 export default function Hero() {
   const prefersReduced = useReducedMotion();
   let hero: HeroContent = defaultHero;
+  let whatsappNumber = defaultContact.whatsappNumber || "558599406173";
 
   try {
     const portfolio = usePortfolio();
     if (portfolio?.data?.hero) {
       hero = portfolio.data.hero;
     }
+    if (portfolio?.data?.contact?.whatsappNumber) {
+      whatsappNumber = portfolio.data.contact.whatsappNumber;
+    }
   } catch {
     // Fallback padrão
   }
+
+  // Botão "Convide para palestra ou consultoria": abre o WhatsApp diretamente
+  const digits = whatsappNumber.replace(/\D/g, "");
+  const inviteUrl = `https://wa.me/${digits.startsWith("55") ? digits : `55${digits}`}?text=${encodeURIComponent("Olá, Elaine! Vi seu portfólio e gostaria de convidar você para uma palestra ou consultoria.")}`;
 
   const fadeUp = prefersReduced
     ? {}
@@ -89,7 +97,7 @@ export default function Hero() {
                 {hero.ctaPrimary.text}
                 <ArrowDown size={18} />
               </a>
-              <a href={hero.ctaSecondary.href} className="btn-secondary">
+              <a href={inviteUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                 <MessageCircle size={18} />
                 {hero.ctaSecondary.text}
               </a>
