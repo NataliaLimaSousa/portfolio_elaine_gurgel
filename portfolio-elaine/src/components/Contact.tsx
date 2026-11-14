@@ -1,26 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, FormEvent } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, ExternalLink, Send, CheckCircle, AlertCircle, ShieldAlert } from "lucide-react";
+import { Mail, ExternalLink } from "lucide-react";
 import { contact as defaultContact, contactForm as defaultContactForm } from "@/content/portfolio";
 import { usePortfolio } from "@/context/PortfolioContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import WhatsAppCTA from "./WhatsAppCTA";
 
-const inputClass =
-  "w-full px-4 py-3 rounded-xl bg-navy-700 border border-navy-700 text-white placeholder:text-teal-100/60 focus:border-teal-600 focus:ring-1 focus:ring-teal-600 outline-none transition-colors";
-
 export default function Contact() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [feedback, setFeedback] = useState("");
-  const startedAt = useRef<number>(0);
   const prefersReduced = useReducedMotion();
-
-  useEffect(() => {
-    startedAt.current = Date.now();
-  }, []);
 
   let contact = defaultContact;
   let contactForm = defaultContactForm;
@@ -39,44 +27,6 @@ export default function Contact() {
     // Fallback
   }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-
-    setStatus("loading");
-    setFeedback("");
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          reason: data.get("reason"),
-          message: data.get("message"),
-          consent: data.get("consent") === "on",
-          website: data.get("website"), // campo-isca (deve ficar vazio)
-          startedAt: startedAt.current,
-        }),
-      });
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok || !json.success) {
-        setStatus("error");
-        setFeedback(json.message || "Não foi possível enviar agora. Tente pelo WhatsApp ou e-mail.");
-        return;
-      }
-
-      form.reset();
-      setStatus("success");
-    } catch {
-      setStatus("error");
-      setFeedback("Sem conexão no momento. Tente novamente ou fale pelo WhatsApp.");
-    }
-  };
-
   return (
     <section
       id="contato"
@@ -86,7 +36,7 @@ export default function Contact() {
       <div className="mx-auto max-w-7xl">
         <p className="section-label !text-[#7FD6CB]">11 — Contato</p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        <div className="grid grid-cols-1 gap-12 max-w-2xl">
           {/* Left: info */}
           <motion.div
             initial={prefersReduced ? {} : { opacity: 0, y: 24 }}
@@ -175,160 +125,6 @@ export default function Contact() {
             </ul>
           </motion.div>
 
-          {/* Right: form */}
-          <motion.div
-            initial={prefersReduced ? {} : { opacity: 0, y: 24 }}
-            whileInView={prefersReduced ? {} : { opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            {status === "success" ? (
-              <div
-                role="status"
-                className="flex flex-col items-center justify-center h-full text-center py-16"
-              >
-                <CheckCircle size={64} className="text-accent mb-6" aria-hidden="true" />
-                <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-                  Mensagem enviada!
-                </h3>
-                <p className="text-teal-100">Obrigada pelo contato. Responderei em breve.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5" aria-describedby="form-aviso">
-                <div>
-                  <label htmlFor="name" className="block text-sm text-teal-100 mb-1.5 text-mono">
-                    Nome
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    minLength={2}
-                    maxLength={100}
-                    autoComplete="name"
-                    className={inputClass}
-                    placeholder="Seu nome completo"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm text-teal-100 mb-1.5 text-mono">
-                    E-mail
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    maxLength={254}
-                    autoComplete="email"
-                    className={inputClass}
-                    placeholder="seu@email.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="reason" className="block text-sm text-teal-100 mb-1.5 text-mono">
-                    Assunto
-                  </label>
-                  <select
-                    id="reason"
-                    name="reason"
-                    required
-                    defaultValue=""
-                    className={`${inputClass} appearance-none cursor-pointer`}
-                  >
-                    <option value="" disabled>
-                      Selecione o assunto
-                    </option>
-                    {contactForm.reasons.map((reason) => (
-                      <option key={reason} value={reason}>
-                        {reason}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm text-teal-100 mb-1.5 text-mono">
-                    Mensagem
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    required
-                    minLength={10}
-                    maxLength={2000}
-                    className={`${inputClass} resize-none`}
-                    placeholder="Como posso ajudar?"
-                  />
-                </div>
-
-                {/* Campo-isca anti-robô: invisível para pessoas */}
-                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-                  <label htmlFor="website">Não preencha este campo</label>
-                  <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
-                </div>
-
-                <p
-                  id="form-aviso"
-                  className="flex items-start gap-2.5 text-xs text-teal-100/90 leading-relaxed"
-                >
-                  <ShieldAlert size={16} className="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
-                  <span>
-                    Não envie exames, laudos, diagnósticos ou outros dados de saúde por este formulário.
-                    Eles serão tratados presencialmente ou em canal adequado.
-                  </span>
-                </p>
-
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="consent"
-                    name="consent"
-                    required
-                    className="mt-1 h-5 w-5 shrink-0 cursor-pointer rounded border-navy-700 bg-navy-700 accent-teal-600"
-                  />
-                  <label htmlFor="consent" className="text-sm text-teal-100 leading-relaxed cursor-pointer">
-                    Li e concordo com o uso do meu nome, e-mail e mensagem para que Elaine Gurgel
-                    responda a este contato, conforme a{" "}
-                    <Link
-                      href="/privacidade"
-                      target="_blank"
-                      className="underline text-white hover:text-teal-100"
-                    >
-                      Política de Privacidade
-                      <span className="sr-only"> (abre em nova aba)</span>
-                    </Link>
-                    .
-                  </label>
-                </div>
-
-                <div aria-live="assertive" className="min-h-0">
-                  {status === "error" && (
-                    <p
-                      role="alert"
-                      className="flex items-start gap-2.5 rounded-xl border border-red-400/50 bg-red-950/50 p-3.5 text-sm text-red-100"
-                    >
-                      <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-                      <span>{feedback}</span>
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="btn-primary !bg-teal-600 hover:!bg-teal-700 w-full justify-center disabled:opacity-60 cursor-pointer"
-                >
-                  {status === "loading" ? "Enviando..." : "Enviar mensagem"}
-                  <Send size={18} aria-hidden="true" />
-                </button>
-              </form>
-            )}
-          </motion.div>
         </div>
       </div>
     </section>
